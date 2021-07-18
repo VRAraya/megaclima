@@ -6,11 +6,12 @@
           <Button label="Ir" />
         </AccordionTab>
         <AccordionTab header="Cotizaciones">
-          <div id="irc">
-            <button v-on:click="irc">Ir</button>
-          </div>
+          <Button label="Ir" />
         </AccordionTab>
-        <AccordionTab header="Producto/Servicio">
+        <AccordionTab header="Productos">
+          <Button label="Ir" />
+        </AccordionTab>
+        <AccordionTab header="Servicios">
           <Button label="Ir" />
         </AccordionTab>
         <AccordionTab header="Clientes">
@@ -21,8 +22,9 @@
 </template>
 
 <style lang="scss">
+
 img {
   max-width: 100%;
 }
+
 </style>
-router.Push({ name: "yourroutename"})

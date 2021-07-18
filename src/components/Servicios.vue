@@ -1,39 +1,32 @@
 <template>
-  <div class="clientes">
+  <div class="servicios">
     <h1>{{MegaC}}</h1>
     <div>
-        <label for="cliente" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Cliente</label>
+        <label for="Servicio" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Nombre Servicio</label>
         <div class="p-col-12 p-md-10">
-            <InputText id="cliente" type="text" />
+            <InputText id="producto" type="text" />
         </div>
     </div>
     <div class="p-field p-grid">
-        <label for="rut" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Rut</label>
+        <label for="Descripcion" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Descripcion</label>
         <div class="p-col-12 p-md-10">
-            <InputText id="rut" type="text" />
+            <InputText id="Descripcion" type="text" />
         </div>
     </div>
     <div class="p-field p-grid">
-        <label for="telefono" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Telefono</label>
+        <label for="Precio" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Precio</label>
         <div class="p-col-12 p-md-10">
-            <InputText id="telefono" type="text" />
+            <InputText id="precio" type="text" />
         </div>
     </div>
-    <div class="p-field p-grid">
-        <label for="correo" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Correo</label>
-        <div class="p-col-12 p-md-10">
-            <InputText id="correo" type="text" />
-        </div>
-    </div>
-    <Button label="Buscar Cliente" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
-    <Button label="Agregar Cliente" icon="pi pi-check" iconPos="right" class="p-button-text p-button-text" />
+    <Button label="Buscar Servicio" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
+    <Button label="Agregar Servicio" icon="pi pi-check" iconPos="right" class="p-button-text p-button-text" />
 </div>
        <h5></h5>
             <DataTable :value="products" v-model:selection="selectedProduct3" dataKey="id" responsiveLayout="scroll" >
-                <Column field="Nombre" header="Nombre"></Column>
-                <Column field="Rut" header="Rut"></Column>
-                <Column field="Telefono" header="Telefono"></Column>
-                <Column field="Correo" header="Correo"></Column>
+                <Column field="NombreServicio" header="Nombre Servicio"></Column>
+                <Column field="Descripcion" header="Descripcion"></Column>
+                <Column field="Precio" header="Precio"></Column>
                 <Column :exportable="false" field="action" header="Acción">
                     <template #body="slotProps">
                         <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editProduct(slotProps.data)" />

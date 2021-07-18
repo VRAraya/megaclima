@@ -2,14 +2,19 @@
   <div class="p-sidebar-left">
       <img alt="Megaclima logo" src="../assets/logo.png">
       <Accordion>
-        <AccordionTab header="Header I">
-          Content
+        <AccordionTab header="Ventas">
+          <Button label="Ir" />
         </AccordionTab>
-        <AccordionTab header="Header II">
-          Content
+        <AccordionTab header="Cotizaciones">
+          <div id="irc">
+            <button v-on:click="irc">Ir</button>
+          </div>
         </AccordionTab>
-        <AccordionTab header="Header III">
-          Content
+        <AccordionTab header="Producto/Servicio">
+          <Button label="Ir" />
+        </AccordionTab>
+        <AccordionTab header="Clientes">
+          <Button label="Ir" />
         </AccordionTab>
       </Accordion>
     </div>
@@ -20,3 +25,4 @@ img {
   max-width: 100%;
 }
 </style>
+router.Push({ name: "yourroutename"})

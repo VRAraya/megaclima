@@ -1,13 +1,13 @@
 <template>
   <div class="Dashboard p-d-flex p-flex-wrap flex">
     <Sidebar/>
-    <Sales title="Registro de Ventas"/>
+    <Sales title="Cotizaciones"/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Sales from '@/components/Sales.vue'
+import Sales from '@/components/Cotizaciones.vue'
 import Sidebar from '@/components/Sidebar.vue'
 // import { ref } from 'vue'
 

@@ -9,7 +9,10 @@ import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
 import Accordion from 'primevue/accordion'
 import AccordionTab from 'primevue/accordiontab'
-
+import InputText from 'primevue/inputtext'
+import AutoComplete from 'primevue/autocomplete'
+import SplitButton from 'primevue/splitbutton'
+import Calendar from 'primevue/calendar'
 import 'primeflex/primeflex.css'
 import 'primevue/resources/themes/saga-blue/theme.css'
 import 'primevue/resources/primevue.min.css'
@@ -27,5 +30,8 @@ app.component('Sidebar', Sidebar)
 app.component('DataTable', DataTable)
 app.component('Accordion', Accordion)
 app.component('AccordionTab', AccordionTab)
-
+app.component('InputText', InputText)
+app.component('AutoComplete', AutoComplete)
+app.component('SplitButton', SplitButton)
+app.component('Calendar', Calendar)
 app.mount('#app')

@@ -1,10 +1,9 @@
-
 <template>
-  <div class="sales">
+  <div class="cotizaciones">
     <h1>{{MegaC}}</h1>
     <div>
       <label>Fecha</label>
-      <Calendar v-model="value" selectionMode="single" />
+      <Calendar v-model="value" selectionMode="single"/>
       <div class="p-fluid">
     <div class="p-field p-grid">
         <label for="cliente" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Cliente</label>
@@ -45,16 +44,33 @@
             <InputText id="descripcion" type="text" />
         </div>
     </div>
-    <Button label="Buscar" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
+    <div class="p-field p-grid">
+        <label for="folio" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Numero de Folio</label>
+        <div class="p-col-12 p-md-10">
+            <InputText id="folio" type="text" />
+        </div>
+    </div>
+    <Button label="Buscar Cotizacion(es)" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
 </div>
-      <DataTable :value="products" responsiveLayout="scroll">
-            <Column field="code" header="Code"></Column>
-            <Column field="name" header="Name"></Column>
-            <Column field="category" header="Category"></Column>
-            <Column field="quantity" header="Quantity"></Column>
-      </DataTable>
+       <h5>RadioButton</h5>
+            <DataTable :value="products" v-model:selection="selectedProduct3" dataKey="id" responsiveLayout="scroll" >
+                <Column selectionMode="single" headerStyle="width: 3em"></Column>
+                <Column field="Fecha" header="Fecha"></Column>
+                <Column field="Nombre" header="Nombre"></Column>
+                <Column field="Rut" header="Rut"></Column>
+                <Column field="Telefono" header="Telefono"></Column>
+                <Column field="Correo" header="Correo"></Column>
+                <Column field="Producto/Servicio" header="Producto/Servicio"></Column>
+                <Column field="Valor" header="Valor"></Column>
+                <Column field="Descripcion" header="Descripcion"></Column>
+                <Column field="Folio" header="Folio"></Column>
+            </DataTable>
     </div>
   </div>
+  <Button label="Generar Venta"  iconPos="right" class="p-button-text p-button-text" />
+  <Button label="Descargar"  iconPos="right" class="p-button-text p-button-text" />
+  <Button label="Editar" iconPos="right" class="p-button-text p-button-text" />
+  <Button label="Borrar" iconPos="right" class="p-button-text p-button-text" />
 </template>
 
 <script>

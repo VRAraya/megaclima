@@ -25,9 +25,9 @@
             <InputText id="correo" type="text" />
         </div>
     </div>
+    <ConfirmPopup></ConfirmPopup>
     <Button label="Buscar Cliente" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
-    <Button label="Agregar Cliente" icon="pi pi-check" iconPos="right" class="p-button-text p-button-text" />
-</div>
+    <Button @click=confirmAddCliente($event) icon="pi pi-check" label="Agregar Cliente"></Button></div>
        <h5></h5>
             <DataTable :value="products" v-model:selection="selectedProduct3" dataKey="id" responsiveLayout="scroll" >
                 <Column field="Nombre" header="Nombre"></Column>
@@ -44,8 +44,9 @@
 </template>
 
 <script>
+
 export default {
-  name: 'Sales',
+  name: 'Clientes',
   props: {
     title: String
   },
@@ -56,8 +57,23 @@ export default {
     return {
       products
     }
+  },
+  methods: {
+    confirmAddCliente (event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Estas seguro?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+        },
+        reject: () => {
+        }
+      })
+    }
   }
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

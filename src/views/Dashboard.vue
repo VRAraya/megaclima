@@ -7,7 +7,7 @@
 
 <script>
 // @ is an alias to /src
-import Sales from '@/components/Servicios.vue'
+import Sales from '@/components/Clientes.vue'
 import Sidebar from '@/components/Sidebar.vue'
 // import { ref } from 'vue'
 

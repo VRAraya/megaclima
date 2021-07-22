@@ -25,8 +25,8 @@
             <InputText id="correo" type="text" />
         </div>
     </div>
-    <ConfirmPopup></ConfirmPopup>
     <Button label="Buscar Cliente" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
+    <ConfirmPopup></ConfirmPopup>
     <Button @click=confirmAddCliente($event) icon="pi pi-check" label="Agregar Cliente"></Button></div>
        <h5></h5>
             <DataTable :value="products" v-model:selection="selectedProduct3" dataKey="id" responsiveLayout="scroll" >
@@ -37,27 +37,15 @@
                 <Column :exportable="false" field="action" header="Acción">
                     <template #body="slotProps">
                         <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editProduct(slotProps.data)" />
-                        <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
+                        <ConfirmPopup></ConfirmPopup>
+                        <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click=confirmDeleteCliente($event) />
                     </template>
                 </Column>
             </DataTable>
 </template>
 
 <script>
-
 export default {
-  name: 'Clientes',
-  props: {
-    title: String
-  },
-  setup () {
-    const products = [
-      { id: '1009', code: 'cm230f032', name: 'Gaming Set', description: 'Product Description', image: 'gaming-set.jpg', price: 299, category: 'Electronics', quantity: 63, inventoryStatus: 'INSTOCK', rating: 3 }
-    ]
-    return {
-      products
-    }
-  },
   methods: {
     confirmAddCliente (event) {
       this.$confirm.require({
@@ -70,6 +58,30 @@ export default {
         reject: () => {
         }
       })
+    },
+    confirmDeleteCliente (event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Estas seguro?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+        },
+        reject: () => {
+        }
+      })
+    }
+  },
+  name: 'Clientes',
+  props: {
+    title: String
+  },
+  setup () {
+    const products = [
+      { id: '1009', code: 'cm230f032', name: 'Gaming Set', description: 'Product Description', image: 'gaming-set.jpg', price: 299, category: 'Electronics', quantity: 63, inventoryStatus: 'INSTOCK', rating: 3 }
+    ]
+    return {
+      products
     }
   }
 }

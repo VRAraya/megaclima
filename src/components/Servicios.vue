@@ -20,8 +20,8 @@
         </div>
     </div>
     <Button label="Buscar Servicio" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
-    <Button label="Agregar Servicio" icon="pi pi-check" iconPos="right" class="p-button-text p-button-text" />
-</div>
+    <ConfirmPopup></ConfirmPopup>
+    <Button @click=confirmAddServicio($event) icon="pi pi-check" iconPos="right" label="Agregar Servicio"></Button></div>
        <h5></h5>
             <DataTable :value="products" v-model:selection="selectedProduct3" dataKey="id" responsiveLayout="scroll" >
                 <Column field="NombreServicio" header="Nombre Servicio"></Column>
@@ -30,7 +30,8 @@
                 <Column :exportable="false" field="action" header="Acción">
                     <template #body="slotProps">
                         <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editProduct(slotProps.data)" />
-                        <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
+                        <ConfirmPopup></ConfirmPopup>
+                        <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click=confirmDeleteServicio($event) />
                     </template>
                 </Column>
             </DataTable>
@@ -39,6 +40,32 @@
 <script>
 export default {
   name: 'Sales',
+  methods: {
+    confirmAddServicio (event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Estas seguro?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+        },
+        reject: () => {
+        }
+      })
+    },
+    confirmDeleteServicio (event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Estas seguro?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+        },
+        reject: () => {
+        }
+      })
+    }
+  },
   props: {
     title: String
   },

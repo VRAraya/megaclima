@@ -14,6 +14,7 @@ import AutoComplete from 'primevue/autocomplete'
 import SplitButton from 'primevue/splitbutton'
 import Calendar from 'primevue/calendar'
 import ConfirmationService from 'primevue/confirmationservice'
+import ConfirmPopup from 'primevue/confirmpopup'
 
 import 'primeflex/primeflex.css'
 import 'primevue/resources/themes/saga-blue/theme.css'
@@ -26,6 +27,7 @@ app.use(ConfirmationService)
 app.use(PrimeVue)
 app.use(router)
 
+app.component('ConfirmPopup', ConfirmPopup)
 app.component('Dialog', Dialog)
 app.component('Button', Button)
 app.component('Column', Column)

@@ -8,6 +8,18 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      billingNumber: {
+        type: Sequelize.STRING, // Campo correspondiente a una cotización convertida en venta,
+        defaultValue: null // cuando no es nulo se tratará de una venta
+      },
+      additionalTax: {
+        type: Sequelize.FLOAT, // Campo correspondiente a una cotización convertida en venta
+        defaultValue: null
+      },
+      discount: {
+        type: Sequelize.FLOAT, // Campo correspondiente a una cotización convertida en venta
+        defaultValue: null
+      },
       paymentMethod: {
         type: Sequelize.STRING
       },

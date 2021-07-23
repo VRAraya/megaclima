@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Order.init({
+    billingNumber: DataTypes.STRING, // Campo correspondiente a una cotización convertida en venta, cuando no es nulo se tratará de una venta
+    additionalTax: DataTypes.FLOAT, // Campo correspondiente a una cotización convertida en venta
+    discount: DataTypes.FLOAT, // Campo correspondiente a una cotización convertida en venta
     paymentMethod: DataTypes.STRING,
     netValue: DataTypes.FLOAT,
     subTotalValue: DataTypes.FLOAT,

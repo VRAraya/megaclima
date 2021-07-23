@@ -11,6 +11,9 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      brandName: {
+        type: Sequelize.STRING
+      },
       value: {
         type: Sequelize.FLOAT
       },

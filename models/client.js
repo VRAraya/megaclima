@@ -1,5 +1,6 @@
 'use strict'
 const { Model } = require('sequelize')
+const { Order } = require('./order')
 
 module.exports = (sequelize, DataTypes) => {
   class Client extends Model {
@@ -10,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate (models) {
       // define association here
+      this.belongsTo(Order)
     }
   };
   Client.init({

@@ -8,16 +8,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      billingNumber: {
-        defaultValue: null,
-        type: Sequelize.STRING
-      },
-      invoice: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
       paymentMethod: {
         type: Sequelize.STRING
+      },
+      netValue: {
+        type: Sequelize.FLOAT
+      },
+      subTotalValue: {
+        type: Sequelize.FLOAT
       },
       totalValue: {
         type: Sequelize.FLOAT

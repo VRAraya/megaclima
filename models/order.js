@@ -2,6 +2,7 @@
 const { Model } = require('sequelize')
 const { Product } = require('./product')
 const { Service } = require('./service')
+const { Client } = require('./client')
 
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
@@ -12,15 +13,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate (models) {
       // define association here
+      this.hasOne(Client)
       this.belongsToMany(Product, { through: 'Product_Details' })
       this.belongsToMany(Service, { through: 'Service_Details' })
     }
   }
   Order.init({
-    billingNumber: DataTypes.STRING,
-    invoice: DataTypes.STRING,
+    paymentMethod: DataTypes.STRING,
+    netValue: DataTypes.FLOAT,
+    subTotalValue: DataTypes.FLOAT,
     totalValue: DataTypes.FLOAT,
-    description: DataTypes.TEXT
+    description: DataTypes.TEXT,
+    clientId: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'Order'

@@ -9,13 +9,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       contactName: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       brandName: {
         type: Sequelize.STRING
       },
       businessName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING // Razón Social
       },
       email: {
         type: Sequelize.STRING

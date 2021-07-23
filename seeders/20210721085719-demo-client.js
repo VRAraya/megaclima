@@ -7,7 +7,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Clients', [{
       contactName: faker.name.findName(),
-      brandName: faker.name.companyName(),
+      brandName: faker.company.companyName(),
       businessName: faker.company.bs(), // Razón Social
       email: faker.internet.email(),
       address: faker.address.streetAddress(),

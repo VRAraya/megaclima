@@ -4,7 +4,7 @@ const faker = require('faker/locale/es')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Order', [{
+    await queryInterface.bulkInsert('Orders', [{
       billingNumber: faker.commerce.productName(),
       invoice: faker.commerce.price(),
       paymentMethod: faker.finance.transactionType(),
@@ -14,6 +14,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Order', null, {})
+    await queryInterface.bulkDelete('Orders', null, {})
   }
 }

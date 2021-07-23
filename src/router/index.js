@@ -7,7 +7,7 @@ const routes = [
     component: Dashboard,
     children: [
       {
-        path: '/sales',
+        path: '',
         component: () => import(/* webpackChunkName: "sales" */ '../views/Sales')
       },
       {

@@ -4,7 +4,7 @@
       <img src="../assets/logo.png" alt="logo">
     </div>
     <div class="menu-items">
-      <router-link to="/sales" active-class="active" tag="button" exact class="side-btn">
+      <router-link to="/" exact-active-class="active" tag="button" class="side-btn">
         <div class="link-container">
           Ventas
         </div>

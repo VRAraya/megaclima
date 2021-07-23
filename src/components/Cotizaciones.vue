@@ -1,5 +1,5 @@
 <template>
-  <div class="sales">
+  <div class="cotizaciones">
     <h1>{{MegaC}}</h1>
     <div>
       <label>Fecha</label>
@@ -50,9 +50,11 @@
             <InputText id="folio" type="text" />
         </div>
     </div>
-    <Button label="Buscar Ventas" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
+    <Button label="Buscar Cotizacion" icon="pi pi-search" iconPos="right" class="p-button-text p-button-text" />
+    <ConfirmPopup></ConfirmPopup>
+    <Button @click=confirmAddCotizacion($event) icon="pi pi-check" iconPos="right" label="Agregar Cotiacion"></Button></div>
 </div>
-    <h5></h5>
+       <h5></h5>
             <DataTable :value="products" v-model:selection="selectedProduct3" dataKey="id" responsiveLayout="scroll" >
                 <Column field="Fecha" header="Fecha"></Column>
                 <Column field="Nombre" header="Nombre"></Column>
@@ -63,28 +65,64 @@
                 <Column field="Valor" header="Valor"></Column>
                 <Column field="Descripcion" header="Descripcion"></Column>
                 <Column field="Folio" header="Folio"></Column>
+                <Column :exportable="false" field="action" header="Acción">
+                    <template #body="slotProps">
+                        <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editProduct(slotProps.data)" />
+                        <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click=confirmDeleteProduct($event) />
+                        <Button icon="pi pi-check" class="p-button-rounded p-button-success p-mr-2" @click=confirmAddVenta($event) />
+                    </template>
+                </Column>
             </DataTable>
     </div>
-  </div>
 </template>
+
 <script>
 export default {
-  name: 'Sales',
+  methods: {
+    confirmAddCotizacion (event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Estas seguro?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+        },
+        reject: () => {
+        }
+      })
+    },
+    confirmAddVenta (event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Estas seguro?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+        },
+        reject: () => {
+        }
+      })
+    },
+    confirmDeleteProduct (event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Estas seguro?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+        },
+        reject: () => {
+        }
+      })
+    }
+  },
+  name: 'Cotizaciones',
   props: {
     title: String
   },
   setup () {
     const products = [
-      { id: '1000', code: 'f230fh0g3', name: 'Bamboo Watch', description: 'Product Description', image: 'bamboo-watch.jpg', price: 65, category: 'Accessories', quantity: 24, inventoryStatus: 'INSTOCK', rating: 5 },
-      { id: '1001', code: 'nvklal433', name: 'Black Watch', description: 'Product Description', image: 'black-watch.jpg', price: 72, category: 'Accessories', quantity: 61, inventoryStatus: 'INSTOCK', rating: 4 },
-      { id: '1002', code: 'zz21cz3c1', name: 'Blue Band', description: 'Product Description', image: 'blue-band.jpg', price: 79, category: 'Fitness', quantity: 2, inventoryStatus: 'LOWSTOCK', rating: 3 },
-      { id: '1003', code: '244wgerg2', name: 'Blue T-Shirt', description: 'Product Description', image: 'blue-t-shirt.jpg', price: 29, category: 'Clothing', quantity: 25, inventoryStatus: 'INSTOCK', rating: 5 },
-      { id: '1004', code: 'h456wer53', name: 'Bracelet', description: 'Product Description', image: 'bracelet.jpg', price: 15, category: 'Accessories', quantity: 73, inventoryStatus: 'INSTOCK', rating: 4 },
-      { id: '1005', code: 'av2231fwg', name: 'Brown Purse', description: 'Product Description', image: 'brown-purse.jpg', price: 120, category: 'Accessories', quantity: 0, inventoryStatus: 'OUTOFSTOCK', rating: 4 },
-      { id: '1006', code: 'bib36pfvm', name: 'Chakra Bracelet', description: 'Product Description', image: 'chakra-bracelet.jpg', price: 32, category: 'Accessories', quantity: 5, inventoryStatus: 'LOWSTOCK', rating: 3 },
-      { id: '1007', code: 'mbvjkgip5', name: 'Galaxy Earrings', description: 'Product Description', image: 'galaxy-earrings.jpg', price: 34, category: 'Accessories', quantity: 23, inventoryStatus: 'INSTOCK', rating: 5 },
-      { id: '1008', code: 'vbb124btr', name: 'Game Controller', description: 'Product Description', image: 'game-controller.jpg', price: 99, category: 'Electronics', quantity: 2, inventoryStatus: 'LOWSTOCK', rating: 4 },
-      { id: '1009', code: 'cm230f032', name: 'Gaming Set', description: 'Product Description', image: 'gaming-set.jpg', price: 299, category: 'Electronics', quantity: 63, inventoryStatus: 'INSTOCK', rating: 3 }
+      { Fecha: '1000', code: 'f230fh0g3', name: 'Bamboo Watch', description: 'Product Description', image: 'bamboo-watch.jpg', price: 65, category: 'Accessories', quantity: 24, inventoryStatus: 'INSTOCK', rating: 5 }
     ]
     return {
       products
@@ -93,16 +131,20 @@ export default {
 }
 </script>
 
-<style scoped>
-  .sales {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    font-size: 40px;
-    color: rgb(167, 167, 167);
-    font-weight: 600;
-  }
-
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+h3 {
+  margin: 60px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
 </style>

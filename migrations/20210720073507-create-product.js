@@ -20,6 +20,9 @@ module.exports = {
       cost: {
         type: Sequelize.FLOAT
       },
+      description: {
+        type: Sequelize.TEXT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

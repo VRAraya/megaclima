@@ -8,42 +8,49 @@ module.exports = {
       {
         name: 'Mantención',
         value: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
       {
         name: 'Reparación o Servicio Técnico',
         value: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
       {
         name: 'Instalación Básica',
         value: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
       {
         name: 'Instalación Media',
         value: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
       {
         name: 'Instalación compleja',
         value: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
       {
         name: 'Venta de equipos',
         value: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
       {
         name: 'Insumos',
         value: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       }

@@ -10,6 +10,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -18,6 +19,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -26,6 +28,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -34,6 +37,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -42,6 +46,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -50,6 +55,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -58,6 +64,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -66,6 +73,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -74,6 +82,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -82,6 +91,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -90,6 +100,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -98,6 +109,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -106,6 +118,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -114,6 +127,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -122,6 +136,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       },
@@ -130,6 +145,7 @@ module.exports = {
         value: faker.commerce.price(),
         brandName: faker.company.companyName(),
         cost: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       }

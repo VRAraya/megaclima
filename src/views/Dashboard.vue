@@ -1,46 +1,36 @@
 <template>
-  <div class="Dashboard p-d-flex p-flex-wrap flex">
-    <Sidebar/>
-    <Sales title="Registro de Ventas"/>
+  <div class="dashboard">
+    <Sidebar />
+    <div class="content">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import Sales from '@/components/Sales.vue'
-import Sidebar from '@/components/Sidebar.vue'
-// import { ref } from 'vue'
+import Sidebar from '../components/Sidebar'
 
 export default {
   name: 'Dashboard',
+
   components: {
-    Sales,
     Sidebar
-  },
-  setup () {
-    return {
-    }
   }
 }
 </script>
 
-<style scoped lang="scss">
-.p-button {
-    margin: 0.3rem .5rem;
-    min-width: 10rem;
-}
+<style scoped>
+  .dashboard {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    background-color: rgb(12, 154, 211);
+    height: 100vh;
+    width: 100vw;
+  }
 
-p {
-    margin: 0;
-}
-
-.confirmation-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.p-dialog .p-button {
-    min-width: 6rem;
-}
+  .content {
+    background-color: white;
+    border-radius: 20px;
+    margin: 6px 6px 6px 0px;
+  }
 </style>

@@ -3,17 +3,30 @@ import Dashboard from '../views/Dashboard.vue'
 
 const routes = [
   {
-    path: '/',
-    name: 'Dashboard',
-    component: Dashboard
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '',
+    component: Dashboard,
+    children: [
+      {
+        path: '/sales',
+        component: () => import(/* webpackChunkName: "sales" */ '../views/Sales')
+      },
+      {
+        path: '/orders',
+        component: () => import(/* webpackChunkName: "orders" */ '../views/Orders')
+      },
+      {
+        path: '/products',
+        component: () => import(/* webpackChunkName: "products" */ '../views/Products')
+      },
+      {
+        path: '/services',
+        component: () => import(/* webpackChunkName: "services" */ '../views/Services')
+      },
+      {
+        path: '/clients',
+        component: () => import(/* webpackChunkName: "clients" */ '../views/Clients')
+      }
+    ]
   }
 ]
 

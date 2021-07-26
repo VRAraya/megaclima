@@ -167,12 +167,12 @@ export default {
       if (product.value.name.trim()) {
         if (product.value.id) {
           products.value[findIndexById(product.value.id)] = product.value
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 })
+          toast.add({ severity: 'success', summary: 'Successful', detail: 'Producto Actualizado', life: 3000 })
         } else {
           product.value.id = createId()
           product.value.brandName = product.value.brandName.value ? product.value.brandName.value : product.value.brandName
           products.value.push(product.value)
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 })
+          toast.add({ severity: 'success', summary: 'Successful', detail: 'Producto Creado', life: 3000 })
         }
 
         productDialog.value = false
@@ -191,7 +191,7 @@ export default {
       products.value = products.value.filter(val => val.id !== product.value.id)
       deleteProductDialog.value = false
       product.value = {}
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 })
+      toast.add({ severity: 'success', summary: 'Successful', detail: 'Producto Eliminado', life: 3000 })
     }
     const findIndexById = (id) => {
       let index = -1
@@ -222,7 +222,7 @@ export default {
       products.value = products.value.filter(val => !selectedProducts.value.includes(val))
       deleteProductsDialog.value = false
       selectedProducts.value = null
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 })
+      toast.add({ severity: 'success', summary: 'Successful', detail: 'Productos Eliminados', life: 3000 })
     }
 
     return {

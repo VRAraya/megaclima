@@ -15,13 +15,10 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "faker": "^5.5.3",
-    "mysql2": "^2.2.5",
     "primeflex": "^3.0.0",
     "primeicons": "^4.1.0",
     "primevue": "^3.5.1",
     "randexp": "^0.5.3",
-    "sequelize": "^6.6.5",
-    "sequelize-cli": "^6.2.0",
     "vue": "^3.0.0",
     "vue-float-label": "^1.6.1",
     "vue-router": "^4.0.0-0"

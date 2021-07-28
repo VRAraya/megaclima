@@ -19,8 +19,10 @@
 <!-- Clients Table -->
         <DataTable ref="dt" :value="clients" v-model:selection="selectedClients" dataKey="id"
           :paginator="true" :rows="5" :filters="filters"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[5,10,25]"
-          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes" responsiveLayout="scroll">
+          :rowsPerPageOptions="[5,10,25]"
+          responsiveLayout="scroll"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes">
           <template #header>
             <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
               <h5 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Clientes</h5>

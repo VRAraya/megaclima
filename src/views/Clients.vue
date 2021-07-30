@@ -101,7 +101,7 @@
       </div>
 
 <!-- New&Edit Client Modal -->
-      <Dialog v-model:visible="clientDialog" :style="{width: '450px'}" header="Nuevo Cliente" :modal="true" class="text-center p-fluid">
+      <Dialog v-model:visible="clientDialog" :style="{width: '450px'}" header="Nuevo Cliente" :modal="true" class="p-fluid">
         <div class="p-field mb-2">
           <label class="mb-2" for="contactName">Contacto</label>
           <InputText id="contactName" v-model.trim="client.contactName" required="true" autofocus :class="{'p-invalid': submitted && !client.contactName}" />
@@ -175,7 +175,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
 import { useToast } from 'primevue/usetoast'
 import ClientService from '../service/ClientService'
@@ -221,9 +221,16 @@ export default {
           clients.value[findIndexById(client.value.id)] = client.value
           toast.add({ severity: 'success', summary: 'Successful', detail: 'Cliente Actualizado', life: 3000 })
         } else {
-          client.value.id = createId()
+          client.value.contactName = client.value.contactName.value ? client.value.contactName.value : client.value.contactName
           client.value.brandName = client.value.brandName.value ? client.value.brandName.value : client.value.brandName
-          clients.value.push(client.value)
+          client.value.businessName = client.value.businessName.value ? client.value.businessName.value : client.value.businessName
+          client.value.email = client.value.email.value ? client.value.email.value : client.value.email
+          client.value.address = client.value.address.value ? client.value.address.value : client.value.address
+          client.value.city = client.value.city.value ? client.value.city.value : client.value.city
+          client.value.phone = client.value.phone.value ? client.value.phone.value : client.value.phone
+          client.value.rut = client.value.rut.value ? client.value.rut.value : client.value.rut
+          // clients.value.push(client.value)
+          clientService.value.createClient(client.value).then(data => { console.log(data) })
           toast.add({ severity: 'success', summary: 'Successful', detail: 'Cliente Creado', life: 3000 })
         }
 
@@ -276,6 +283,12 @@ export default {
       selectedClients.value = null
       toast.add({ severity: 'success', summary: 'Successful', detail: 'Clientes Eliminados', life: 3000 })
     }
+
+    watchEffect(() => {
+      if (clients.value) {
+        console.log(clients.value)
+      }
+    })
 
     return {
       dt,

@@ -10,6 +10,35 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
+// const db = require('./database/index.js')
+// eslint-disable-next-line no-unused-vars
+// let services
+
+// async function getServices () {
+//   try {
+//     console.log('Connecting to database')
+//     services = await db({
+//       dialect: 'sqlite',
+//       storage: './database/database.sqlite',
+//       pool: {
+//         max: 10,
+//         min: 0,
+//         idle: 10000
+//       },
+//       query: {
+//         raw: true
+//       },
+//       logging: console.log()
+//     })
+//     console.log('Connected')
+//   } catch (error) {
+//     console.error(error)
+//   }
+//   console.log(services.User)
+// }
+
+// getServices()
+
 async function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({

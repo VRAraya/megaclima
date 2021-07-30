@@ -8,12 +8,15 @@ export default class OrderService {
           [
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -31,7 +34,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -71,12 +75,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -94,7 +101,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -143,12 +151,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -166,7 +177,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -177,12 +189,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -200,7 +215,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -240,12 +256,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -263,7 +282,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -285,12 +305,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -308,7 +331,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -348,12 +372,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -371,7 +398,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -411,12 +439,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -434,7 +465,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -456,12 +488,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -479,7 +514,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -510,12 +546,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -533,7 +572,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -573,12 +613,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -596,7 +639,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -618,12 +662,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -641,7 +688,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -690,12 +738,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -713,7 +764,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -735,12 +787,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -758,7 +813,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -798,12 +854,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -821,7 +880,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),
@@ -852,12 +912,15 @@ export default class OrderService {
             },
             {
               id: faker.finance.mask(),
-              paymentMethod: faker.finance.transactionType(),
+              paymentMethod: null,
+              paymentStatus: 'pending',
               description: faker.commerce.productDescription(),
               netValue: faker.commerce.price(),
+              billingNumber: null,
               subTotalValue: faker.finance.amount(),
               totalValue: faker.finance.amount(),
-              client: {
+              client:
+              {
                 id: faker.finance.mask(),
                 contactName: faker.name.findName(),
                 brandName: faker.company.companyName(),
@@ -875,7 +938,8 @@ export default class OrderService {
                   name: 'Instalación Básica',
                   description: faker.commerce.productDescription(),
                   price: faker.commerce.price()
-                }, {
+                },
+                {
                   id: '0100',
                   name: 'Mantención',
                   description: faker.commerce.productDescription(),

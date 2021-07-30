@@ -7,25 +7,46 @@
       <div class="card">
         <Toolbar class="p-mb-4">
           <template #left>
-            <Button label="Nuevo" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openNew" />
-            <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger p-ml-2" @click="confirmDeleteSelected" :disabled="!selectedClients || !selectedClients.length" />
+            <Button
+              label="Nuevo"
+              icon="pi pi-plus"
+              class="p-button-success p-mr-2"
+              @click="openNew"
+            />
+            <Button
+              label="Eliminar"
+              icon="pi pi-trash"
+              class="p-button-danger p-ml-2"
+              @click="confirmDeleteSelected"
+              :disabled="!selectedClients || !selectedClients.length"
+            />
           </template>
-
           <template #right>
-            <Button label="Exportar" icon="pi pi-upload" class="p-button-help" @click="exportCSV($event)"  />
+            <Button
+              label="Exportar"
+              icon="pi pi-upload"
+              class="p-button-help"
+              @click="exportCSV($event)"
+            />
           </template>
         </Toolbar>
 
 <!-- Clients Table -->
-        <DataTable ref="dt" :value="clients" v-model:selection="selectedClients" dataKey="id"
-          :paginator="true" :rows="5" :filters="filters"
+        <DataTable
+          ref="dt"
+          dataKey="id"
+          :rows="5"
+          :value="clients"
+          :paginator="true"
+          :filters="filters"
           :rowsPerPageOptions="[5,10,25]"
+          v-model:selection="selectedClients"
           responsiveLayout="scroll"
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes">
           <template #header>
             <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-              <h5 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Clientes</h5>
+              <h4 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Clientes</h4>
               <span class="p-input-icon-left">
                 <i class="pi pi-search" />
                 <InputText v-model="filters['global'].value" placeholder="Buscar..." />
@@ -72,7 +93,7 @@
           </Column>
           <Column :exportable="false">
             <template #body="slotProps">
-              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editClient(slotProps.data)" />
+              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editClient(slotProps.data)" />
               <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteClient(slotProps.data)" />
             </template>
           </Column>
@@ -80,7 +101,7 @@
       </div>
 
 <!-- New&Edit Client Modal -->
-      <Dialog v-model:visible="clientDialog" :style="{width: '450px'}" header="Nuevo Cliente" :modal="true" class="p-text-center p-fluid">
+      <Dialog v-model:visible="clientDialog" :style="{width: '450px'}" header="Nuevo Cliente" :modal="true" class="text-center p-fluid">
         <div class="p-field mb-2">
           <label class="mb-2" for="contactName">Contacto</label>
           <InputText id="contactName" v-model.trim="client.contactName" required="true" autofocus :class="{'p-invalid': submitted && !client.contactName}" />
@@ -169,16 +190,16 @@ export default {
       clientService.value.getClients().then(data => { clients.value = data })
     })
 
-    const toast = useToast()
     const dt = ref()
     const clients = ref()
+    const client = ref({})
+    const toast = useToast()
+    const submitted = ref(false)
+    const selectedClients = ref()
     const clientDialog = ref(false)
     const deleteClientDialog = ref(false)
     const deleteClientsDialog = ref(false)
-    const client = ref({})
     const clientService = ref(new ClientService())
-    const selectedClients = ref()
-    const submitted = ref(false)
     const filters = ref({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
@@ -258,23 +279,23 @@ export default {
 
     return {
       dt,
-      clients,
-      clientDialog,
-      deleteClientDialog,
-      deleteClientsDialog,
       client,
-      selectedClients,
+      clients,
       filters,
-      submitted,
       openNew,
+      createId,
+      submitted,
+      exportCSV,
       hideDialog,
       saveClient,
       editClient,
-      confirmDeleteClient,
+      clientDialog,
       deleteClient,
       findIndexById,
-      createId,
-      exportCSV,
+      selectedClients,
+      deleteClientDialog,
+      deleteClientsDialog,
+      confirmDeleteClient,
       confirmDeleteSelected,
       deleteSelectedClients
     }

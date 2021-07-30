@@ -23,6 +23,7 @@ import InputNumber from 'primevue/inputnumber'
 import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmPopup from 'primevue/confirmpopup'
 import ToastService from 'primevue/toastservice'
+import MultiSelect from 'primevue/multiselect'
 
 import 'primeflex/primeflex.css'
 import 'primevue/resources/themes/saga-blue/theme.css'
@@ -55,4 +56,5 @@ app.component('Textarea', Textarea)
 app.component('Dropdown', Dropdown)
 app.component('RadioButton', RadioButton)
 app.component('InputNumber', InputNumber)
+app.component('MultiSelect', MultiSelect)
 app.mount('#app')

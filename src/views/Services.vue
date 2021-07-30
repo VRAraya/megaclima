@@ -23,7 +23,7 @@
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} servicios" responsiveLayout="scroll">
           <template #header>
             <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-              <h5 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Servicios</h5>
+              <h4 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Servicios</h4>
               <span class="p-input-icon-left">
                 <i class="pi pi-search" />
                 <InputText v-model="filters['global'].value" placeholder="Buscar..." />
@@ -32,6 +32,11 @@
           </template>
 
           <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+          <Column field="id" header="Código" :sortable="true" style="max-width:4rem">>
+            <template #body="slotProps">
+              {{(slotProps.data.id).padStart(6, '000000')}}
+            </template>
+          </Column>
           <Column field="name" header="Nombre" :sortable="true" style="max-width:8rem"></Column>
           <Column field="price" header="Precio" :sortable="true" mode="currency" currency="CLP" currencyDisplay="symbol" locale="es-CL" style="max-width:5rem">
             <template #body="slotProps">

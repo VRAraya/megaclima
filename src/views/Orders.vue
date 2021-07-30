@@ -48,7 +48,7 @@
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cotizaciones">
           <template #header>
             <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-              <h5 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Cotizaciones</h5>
+              <h4 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Cotizaciones</h4>
               <span class="p-input-icon-left">
                 <i class="pi pi-search" />
                 <InputText v-model="filters['global'].value" placeholder="Buscar..." />
@@ -61,11 +61,6 @@
           <Column field="id" header="Código" :sortable="true" style="max-width:4rem">>
             <template #body="slotProps">
               {{(slotProps.data.id).padStart(6, '000000')}}
-            </template>
-          </Column>
-          <Column field="paymentMethod" header="Tipo de Pago" :sortable="true" style="max-width:5rem">>
-            <template #body="slotProps">
-              {{slotProps.data.paymentMethod}}
             </template>
           </Column>
           <Column field="description" header="Descripción" style="max-width:8rem"></Column>
@@ -122,7 +117,7 @@
                 </Column>
                 <Column headerStyle="width:4rem">
                   <template #body>
-                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-info p-mr-2" />
+                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-info mr-1" />
                     <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" />
                   </template>
                 </Column>
@@ -136,7 +131,7 @@
                     <Button
                       label="Agregar Servicio"
                       icon="pi pi-plus"
-                      class="p-button-success p-mr-2"
+                      class="p-button-success mr-2"
                     />
                   </div>
                 </template>
@@ -149,7 +144,7 @@
                 </Column>
                 <Column headerStyle="width:4rem">
                   <template #body>
-                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-info p-mr-2" />
+                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-info mr-1" />
                     <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" />
                   </template>
                 </Column>
@@ -158,23 +153,66 @@
           </template>
           <Column :exportable="false">
             <template #body="slotProps">
-              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editClient(slotProps.data)" />
-              <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteClient(slotProps.data)" />
+              <Button icon="pi pi-money-bill" class="p-button-rounded p-button-info mr-1" @click="payOrder(slotProps.data)" />
+              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-1" @click="editOrder(slotProps.data)" />
+              <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteOrder(slotProps.data)" />
             </template>
           </Column>
         </DataTable>
       </div>
 
 <!-- New&Edit Order Modal -->
-      <Dialog v-model:visible="orderDialog" :style="{width: '450px'}" header="Nueva Cotización" :modal="true" class="p-text-center p-fluid">
-        <div class="p-field mb-2">
-          <label class="mb-2" for="contactName">Contacto</label>
-          <InputText id="contactName" v-model.trim="order.contactName" required="true" autofocus :class="{'p-invalid': submitted && !order.contactName}" />
-          <small class="p-error" v-if="submitted && !order.contactName">Nombre de contacto es requerido.</small>
+      <Dialog v-model:visible="orderDialog" :style="{width: '800px'}" header="Nueva Cotización" :modal="true" class="p-fluid">
+        <div class="grid">
+          <div class="col p-field">
+            <label class="mb-2" for="client">Cliente</label>
+            <AutoComplete
+              id="client"
+              v-model="order.client"
+              :suggestions="filteredClients"
+              @complete="searchClient($event)"
+              :dropdown="true"
+              field="contactName"
+              forceSelection
+            >
+              <template #item="slotProps">
+                <div class="client-item">
+                  <div class="p-ml-2">{{slotProps.item.contactName}}</div>
+                </div>
+              </template>
+            </AutoComplete>
+          </div>
+          <div class="col flex align-items-end">
+            <Button
+              label="Nuevo Cliente"
+              icon="pi pi-plus"
+              class="p-button-success p-mr-2"
+              @click="openNewClient"
+            />
+          </div>
         </div>
         <div class="p-field mb-2">
-          <label class="mb-2" for="brandName">Empresa</label>
-          <InputText id="brandName" v-model.trim="order.brandName" autofocus :class="{'p-invalid': submitted && !order.brandName}" />
+          <label class="mb-2" for="products">Productos a vender</label>
+          <MultiSelect
+            id="products"
+            :filter="true"
+            :showToggleAll="false"
+            optionLabel="name"
+            v-model="order.products"
+            :options="productsOptions"
+            class="multiselect-custom"
+          >
+            <template #value="slotProps">
+              <div class="product-item product-item-value" v-for="option of slotProps.value" :key="option.id">
+                <div>{{option.name}}</div>
+              </div>
+            </template>
+            <template #option="slotProps">
+              <div class="product-item">
+                <div>{{slotProps.option.name}}</div>
+              </div>
+            </template>
+          </MultiSelect>
         </div>
         <div class="p-field mb-2">
           <label class="mb-2" for="businessName">Razón Social</label>
@@ -212,6 +250,53 @@
         </template>
       </Dialog>
 
+<!-- New Client Modal -->
+      <Dialog v-model:visible="clientDialog" :style="{width: '450px'}" header="Nuevo Cliente" :modal="true" class="p-fluid">
+        <div class="p-field mb-2">
+          <label class="mb-2" for="contactName">Contacto</label>
+          <InputText id="contactName" v-model.trim="client.contactName" required="true" autofocus :class="{'p-invalid': submittedClient && !client.contactName}" />
+          <small class="p-error" v-if="submittedClient && !client.contactName">Nombre de contacto es requerido.</small>
+        </div>
+        <div class="p-field mb-2">
+          <label class="mb-2" for="brandName">Empresa</label>
+          <InputText id="brandName" v-model.trim="client.brandName" autofocus :class="{'p-invalid': submittedClient && !client.brandName}" />
+        </div>
+        <div class="p-field mb-2">
+          <label class="mb-2" for="businessName">Razón Social</label>
+          <InputText id="businessName" v-model.trim="client.businessName" autofocus :class="{'p-invalid': submittedClient && !client.businessName}" />
+        </div>
+        <div class="p-field mb-2">
+          <label class="mb-2" for="email">Email</label>
+          <InputText id="email" v-model="client.email" required="true" autofocus :class="{'p-invalid': submittedClient && !client.email}" />
+          <small class="p-error" v-if="submittedClient && !client.email">Email es requerido.</small>
+        </div>
+        <div class="p-field mb-2">
+          <label class="mb-2" for="address">Dirección</label>
+          <Textarea id="address" v-model.trim="client.address" rows="2" cols="20" required="true" autofocus :class="{'p-invalid': submittedClient && !client.address}" />
+          <small class="p-error" v-if="submittedClient && !client.address">La dirección es requerida.</small>
+        </div>
+        <div class="p-field mb-2">
+          <label class="mb-2" for="city">Ciudad</label>
+          <InputText id="city" v-model.trim="client.city" required="true" autofocus :class="{'p-invalid': submittedClient && !client.city}" />
+          <small class="p-error" v-if="submittedClient && !client.city">La ciudad es requerida.</small>
+        </div>
+        <div class="p-field mb-2 p-col">
+          <label class="mb-2" for="phone">Teléfono</label>
+          <InputText id="phone" v-model.trim="client.phone" required="true" autofocus :class="{'p-invalid': submittedClient && !client.phone}" />
+          <small class="p-error" v-if="submittedClient && !client.phone">Teléfono es requerido.</small>
+        </div>
+        <div class="p-field mb-2 p-col">
+          <label class="mb-2" for="rut">Rut</label>
+          <InputText id="rut" v-model.trim="client.rut" required="true" autofocus :class="{'p-invalid': submittedClient && !client.rut}" />
+          <small class="p-error" v-if="submittedClient && !client.rut">Rut es requerido.</small>
+        </div>
+
+        <template class="p-text-center" #footer>
+          <Button label="Cancelar" icon="pi pi-times" class="p-button-raised p-button-danger" @click="hideClientDialog"/>
+          <Button label="Guardar" icon="pi pi-check" class="p-button-raised p-button-success" @click="saveClient" />
+        </template>
+      </Dialog>
+
 <!-- Delete Order Modal -->
       <Dialog v-model:visible="deleteOrderDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
         <div class="confirmation-content">
@@ -221,6 +306,23 @@
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteOrderDialog = false"/>
           <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteOrder" />
+        </template>
+      </Dialog>
+
+<!-- Pay Order Modal -->
+      <Dialog v-model:visible="payOrderDialog" :style="{width: '450px'}" header="Pagar Cotizacion" :modal="true" class="p-fluid">
+        <div class="p-field mb-2">
+          <label class="mb-2" for="paymentMethod">Tipo de Pago</label>
+          <InputText id="paymentMethod" v-model.trim="order.paymentMethod" required="true" autofocus :class="{'p-invalid': submitted && !order.contactName}" />
+          <small class="p-error" v-if="submitted && !order.paymentMethod">Tipo de Pago es requerido.</small>
+        </div>
+        <div class="p-field mb-2">
+          <label class="mb-2" for="billingNumber">Numero de Facturación</label>
+          <InputText id="billingNumber" v-model.trim="order.billingNumber" autofocus :class="{'p-invalid': submitted && !order.brandName}" />
+        </div>
+        <template #footer>
+          <Button label="Cancelar" icon="pi pi-times" class="p-button-raised p-button-danger" @click="hideDialog"/>
+          <Button label="Guardar" icon="pi pi-check" class="p-button-raised p-button-success" @click="saveOrder" />
         </template>
       </Dialog>
 
@@ -240,10 +342,13 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+// eslint-disable-next-line no-unused-vars
+import { ref, onMounted, watchEffect } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
 import { useToast } from 'primevue/usetoast'
 import OrderService from '../service/OrderService'
+import ClientService from '../service/ClientService'
+import ProductService from '../service/ProductService'
 
 export default {
   name: 'Orders',
@@ -253,19 +358,31 @@ export default {
   setup () {
     onMounted(() => {
       orderService.value.getOrders().then(data => { orders.value = data })
+      productService.value.getProducts().then(data => { productsOptions.value = data })
+      clientService.value.getClients().then(data => { clients.value = data.reverse() })
     })
 
-    const toast = useToast()
     const dt = ref()
     const orders = ref()
-    const orderDialog = ref(false)
-    const deleteOrderDialog = ref(false)
-    const deleteOrdersDialog = ref(false)
+    const clients = ref()
     const order = ref({})
-    const orderService = ref(new OrderService())
+    const client = ref({})
+    const toast = useToast()
     const selectedOrders = ref()
     const submitted = ref(false)
+    const submittedClient = ref(false)
     const expandedRows = ref([])
+    const selectedClient = ref()
+    const filteredClients = ref()
+    const productsOptions = ref()
+    const orderDialog = ref(false)
+    const clientDialog = ref(false)
+    const payOrderDialog = ref(false)
+    const deleteOrderDialog = ref(false)
+    const deleteOrdersDialog = ref(false)
+    const orderService = ref(new OrderService())
+    const clientService = ref(new ClientService())
+    const productService = ref(new ProductService())
 
     const onRowExpand = (event) => {
       toast.add({ severity: 'info', summary: 'Cotización Expandida', detail: event.data.name, life: 3000 })
@@ -287,6 +404,15 @@ export default {
 
     const formatCurrency = (value) => {
       if (value) { return value.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' }) }
+    }
+    const openNewClient = () => {
+      client.value = {}
+      submittedClient.value = false
+      clientDialog.value = true
+    }
+    const hideClientDialog = () => {
+      clientDialog.value = false
+      submittedClient.value = false
     }
     const openNew = () => {
       order.value = {}
@@ -315,9 +441,50 @@ export default {
         order.value = {}
       }
     }
+
+    const saveClient = () => {
+      submittedClient.value = true
+
+      if (client.value.contactName.trim()) {
+        client.value.id = createId()
+        client.value.brandName = client.value.brandName.value ? client.value.brandName.value : client.value.brandName
+        clients.value.push(client.value)
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Cliente Creado', life: 3000 })
+
+        clientDialog.value = false
+        client.value = {}
+      }
+    }
+
+    const searchClient = (event) => {
+      setTimeout(() => {
+        if (!event.query.trim().length) {
+          filteredClients.value = [...clients.value]
+        } else {
+          filteredClients.value = clients.value.filter((cli) => {
+            return cli.contactName.toLowerCase().startsWith(event.query.toLowerCase())
+          })
+        }
+      }, 250)
+    }
+
+    watchEffect(() => {
+      if (order.value) {
+        console.log(order.value)
+      }
+    })
+
+    // watchEffect(() => {
+    //   console.log(clientDialog.value)
+    // })
+
     const editOrder = (ord) => {
       order.value = { ...ord }
       orderDialog.value = true
+    }
+    const payOrder = (ord) => {
+      order.value = { ...ord }
+      payOrderDialog.value = true
     }
     const confirmDeleteOrder = (ord) => {
       order.value = ord
@@ -363,31 +530,44 @@ export default {
 
     return {
       dt,
-      orders,
-      orderDialog,
-      deleteOrderDialog,
-      deleteOrdersDialog,
       order,
-      selectedOrders,
-      filters,
-      submitted,
+      orders,
+      client,
       openNew,
-      hideDialog,
+      clients,
+      filters,
+      payOrder,
+      createId,
       saveOrder,
       editOrder,
-      confirmDeleteOrder,
-      deleteOrder,
-      findIndexById,
-      createId,
-      exportCSV,
-      confirmDeleteSelected,
-      deleteSelectedOrders,
-      formatCurrency,
-      expandedRows,
-      onRowExpand,
-      onRowCollapse,
       expandAll,
-      collapseAll
+      submitted,
+      exportCSV,
+      saveClient,
+      hideDialog,
+      orderDialog,
+      collapseAll,
+      deleteOrder,
+      onRowExpand,
+      searchClient,
+      expandedRows,
+      clientDialog,
+      openNewClient,
+      findIndexById,
+      onRowCollapse,
+      selectedOrders,
+      selectedClient,
+      payOrderDialog,
+      formatCurrency,
+      productsOptions,
+      submittedClient,
+      filteredClients,
+      hideClientDialog,
+      deleteOrderDialog,
+      deleteOrdersDialog,
+      confirmDeleteOrder,
+      deleteSelectedOrders,
+      confirmDeleteSelected
     }
   }
 }
@@ -438,4 +618,39 @@ export default {
   .services-subtable {
     padding: 1rem;
   }
+
+  .p-multiselect {
+    width: 100%;
+}
+
+.quantity-option {
+  height: 100%;
+  width: 20px;
+}
+
+::v-deep(.multiselect-custom) {
+    .p-multiselect-label:not(.p-placeholder) {
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+    }
+
+    .product-item-value {
+        padding: .25rem .5rem;
+        border-radius: 3px;
+        display: inline-flex;
+        margin-right: .5rem;
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+
+        img.flag {
+            width: 17px;
+        }
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .p-multiselect {
+        width: 100%;
+    }
+}
 </style>

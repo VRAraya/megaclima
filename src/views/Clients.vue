@@ -206,6 +206,7 @@ export default {
 
     const openNew = () => {
       client.value = {}
+      console.log(client.value)
       submitted.value = false
       clientDialog.value = true
     }
@@ -231,7 +232,8 @@ export default {
           client.value.rut = client.value.rut.value ? client.value.rut.value : client.value.rut
           // clients.value.push(client.value)
           clientService.value.createClient(client.value).then(data => { console.log(data) })
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Cliente Creado', life: 3000 })
+          console.log('Cliente Creado')
+          clientService.value.getClients().then(data => { clients.value = data })
         }
 
         clientDialog.value = false

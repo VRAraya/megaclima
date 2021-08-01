@@ -3,36 +3,34 @@
 const Sequelize = require('sequelize')
 const setupDatabase = require('../lib/db')
 
-module.exports = function setupClientModel (config) {
+module.exports = function setupOrderModel (config) {
   const sequelize = setupDatabase(config)
 
-  return sequelize.define('clients', {
-    contactName: {
+  return sequelize.define('orders', {
+    description: {
+      type: Sequelize.TEXT
+    },
+    billingNumber: {
       type: Sequelize.STRING,
       allowNull: false
     },
-    brandName: {
-      type: Sequelize.STRING
-    },
-    email: {
+    paymentMethod: {
       type: Sequelize.STRING,
       allowNull: false
     },
-    businessName: {
-      type: Sequelize.STRING
-    },
-    address: {
+    paymentStatus: {
       type: Sequelize.STRING,
       allowNull: false
     },
-    phone: {
-      type: Sequelize.STRING
+    netValue: {
+      type: Sequelize.FLOAT
     },
-    city: {
-      type: Sequelize.STRING
+    subTotalValue: {
+      type: Sequelize.FLOAT
     },
-    rut: {
-      type: Sequelize.STRING
+    totalValue: {
+      type: Sequelize.FLOAT,
+      allowNull: false
     }
   }, {
     paranoid: true

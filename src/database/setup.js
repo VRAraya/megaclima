@@ -22,6 +22,11 @@ async function setup () {
     setup: true,
     dialect: 'sqlite',
     storage: './src/database/database.sqlite',
+    pool: {
+      max: 10,
+      min: 0,
+      idle: 10000
+    },
     query: {
       raw: true
     },

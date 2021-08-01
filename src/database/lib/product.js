@@ -8,8 +8,8 @@ module.exports = function setupClient (ClientModel) {
       }
     }
 
-    const existingClient = await ClientModel.findOne({ cond })
-    console.log(existingClient)
+    const existingClient = await ClientModel.findOne(cond)
+
     if (existingClient) {
       const updated = await ClientModel.update(client, cond)
       return updated ? ClientModel.findOne(cond) : existingClient
@@ -20,7 +20,7 @@ module.exports = function setupClient (ClientModel) {
   }
 
   async function findById (id) {
-    return ClientModel.findByPk(id)
+    return ClientModel.findById(id)
   }
 
   async function findAll () {
@@ -36,18 +36,10 @@ module.exports = function setupClient (ClientModel) {
     return result
   }
 
-  async function findByEmail (email) {
-    return await ClientModel.findOne({
+  function findByEmail (email) {
+    return ClientModel.findOne({
       where: {
         email
-      }
-    })
-  }
-
-  async function deleteById (id) {
-    return await ClientModel.destroy({
-      where: {
-        id
       }
     })
   }
@@ -57,7 +49,6 @@ module.exports = function setupClient (ClientModel) {
     findById,
     findAll,
     findByRut,
-    findByEmail,
-    deleteById
+    findByEmail
   }
 }

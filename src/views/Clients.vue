@@ -151,11 +151,11 @@
       <Dialog v-model:visible="deleteClientDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
         <div class="confirmation-content">
           <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
-          <span v-if="client">¿Estás seguro que quieres eliminar <b>{{client.contactName}}</b>?</span>
+          <span v-if="client">¿Estás seguro que quieres eliminar a <b>{{client.contactName}}</b>?</span>
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteClientDialog = false"/>
-          <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteClient" />
+          <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteClient(client.id)" />
         </template>
       </Dialog>
 
@@ -177,7 +177,6 @@
 <script>
 import { ref, onMounted, watchEffect } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
-import { useToast } from 'primevue/usetoast'
 import ClientService from '../service/ClientService'
 
 export default {
@@ -193,7 +192,6 @@ export default {
     const dt = ref()
     const clients = ref()
     const client = ref({})
-    const toast = useToast()
     const submitted = ref(false)
     const selectedClients = ref()
     const clientDialog = ref(false)
@@ -203,91 +201,76 @@ export default {
     const filters = ref({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
-
+    // Abre el modal y prepara un objeto vacío para un nuevo cliente
     const openNew = () => {
       client.value = {}
-      console.log(client.value)
       submitted.value = false
       clientDialog.value = true
     }
+    // Esconde el modal de cliente
     const hideDialog = () => {
       clientDialog.value = false
       submitted.value = false
     }
+    // Funcion para crear o guardar
     const saveClient = () => {
       submitted.value = true
-
       if (client.value.contactName.trim()) {
-        if (client.value.id) {
-          clients.value[findIndexById(client.value.id)] = client.value
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Cliente Actualizado', life: 3000 })
-        } else {
-          client.value.contactName = client.value.contactName.value ? client.value.contactName.value : client.value.contactName
-          client.value.brandName = client.value.brandName.value ? client.value.brandName.value : client.value.brandName
-          client.value.businessName = client.value.businessName.value ? client.value.businessName.value : client.value.businessName
-          client.value.email = client.value.email.value ? client.value.email.value : client.value.email
-          client.value.address = client.value.address.value ? client.value.address.value : client.value.address
-          client.value.city = client.value.city.value ? client.value.city.value : client.value.city
-          client.value.phone = client.value.phone.value ? client.value.phone.value : client.value.phone
-          client.value.rut = client.value.rut.value ? client.value.rut.value : client.value.rut
-          // clients.value.push(client.value)
-          clientService.value.createClient(client.value).then(data => { console.log(data) })
-          console.log('Cliente Creado')
-          clientService.value.getClients().then(data => { clients.value = data })
-        }
+        client.value.contactName = client.value.contactName.value ? client.value.contactName.value : client.value.contactName
+        client.value.brandName = client.value.brandName.value ? client.value.brandName.value : client.value.brandName
+        client.value.businessName = client.value.businessName.value ? client.value.businessName.value : client.value.businessName
+        client.value.email = client.value.email.value ? client.value.email.value : client.value.email
+        client.value.address = client.value.address.value ? client.value.address.value : client.value.address
+        client.value.city = client.value.city.value ? client.value.city.value : client.value.city
+        client.value.phone = client.value.phone.value ? client.value.phone.value : client.value.phone
+        client.value.rut = client.value.rut.value ? client.value.rut.value : client.value.rut
+        clientService.value.createClient(client.value).then(data => { console.log(data) })
 
         clientDialog.value = false
         client.value = {}
+        clientService.value.getClients().then(data => { clients.value = data })
       }
     }
+    // Prepara y abre el modal de cliente para su edicion
     const editClient = (cli) => {
       client.value = { ...cli }
       clientDialog.value = true
     }
+    // Prepara el modal de confirmación de eliminacion de cliente
     const confirmDeleteClient = (cli) => {
       client.value = cli
       deleteClientDialog.value = true
     }
-    const deleteClient = () => {
-      clients.value = clients.value.filter(val => val.id !== client.value.id)
+    // Elimina el cliente
+    const deleteClient = (cliId) => {
+      clientService.value.deleteClient(cliId).then(data => { console.log(data) })
       deleteClientDialog.value = false
       client.value = {}
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Cliente Eliminado', life: 3000 })
+      console.log('Cliente Eliminado')
     }
-    const findIndexById = (id) => {
-      let index = -1
-      for (let i = 0; i < clients.value.length; i++) {
-        if (clients.value[i].id === id) {
-          index = i
-          break
-        }
-      }
-
-      return index
-    }
-    const createId = () => {
-      let id = ''
-      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-      for (var i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length))
-      }
-      return id
-    }
+    // Exporta un CSV con los clientes existentes
     const exportCSV = () => {
       dt.value.exportCSV()
     }
+    // Abre el modal y pide confirmación para eliminar los clientes seleccionados
     const confirmDeleteSelected = () => {
       deleteClientsDialog.value = true
     }
+    // Elimina los clientes selecionados
     const deleteSelectedClients = () => {
-      clients.value = clients.value.filter(val => !selectedClients.value.includes(val))
+      console.log(selectedClients.value)
+      selectedClients.value.forEach(cli => {
+        clientService.value.deleteClient(cli.id).then(data => { console.log(data) })
+      })
       deleteClientsDialog.value = false
       selectedClients.value = null
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Clientes Eliminados', life: 3000 })
+      clientService.value.getClients().then(data => { clients.value = data })
+      console.log('Clientes Eliminados')
     }
 
     watchEffect(() => {
       if (clients.value) {
+        console.log('Recargando clientes')
         console.log(clients.value)
       }
     })
@@ -298,7 +281,6 @@ export default {
       clients,
       filters,
       openNew,
-      createId,
       submitted,
       exportCSV,
       hideDialog,
@@ -306,7 +288,6 @@ export default {
       editClient,
       clientDialog,
       deleteClient,
-      findIndexById,
       selectedClients,
       deleteClientDialog,
       deleteClientsDialog,

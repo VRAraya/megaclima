@@ -8,8 +8,7 @@ module.exports = function setupClient (ClientModel) {
       }
     }
 
-    const existingClient = await ClientModel.findOne({ cond })
-    console.log(existingClient)
+    const existingClient = await ClientModel.findOne(cond)
     if (existingClient) {
       const updated = await ClientModel.update(client, cond)
       return updated ? ClientModel.findOne(cond) : existingClient

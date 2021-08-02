@@ -1,45 +1,36 @@
 'use strict'
 
-module.exports = function setupClient (ClientModel) {
-  async function createOrUpdate (client) {
+module.exports = function setupService (ServiceModel) {
+  async function createOrUpdate (serv) {
     const cond = {
       where: {
-        contactName: client.contactName
+        id: serv.id
       }
     }
 
-    const existingClient = await ClientModel.findOne(cond)
+    const existingService = await ServiceModel.findOne(cond)
 
-    if (existingClient) {
-      const updated = await ClientModel.update(client, cond)
-      return updated ? ClientModel.findOne(cond) : existingClient
+    if (existingService) {
+      const updated = await ServiceModel.update(serv, cond)
+      return updated ? ServiceModel.findOne(cond) : existingService
     }
 
-    const result = await ClientModel.create(client)
+    const result = await ServiceModel.create(serv)
     return result.toJSON()
   }
 
   async function findById (id) {
-    return ClientModel.findById(id)
+    return ServiceModel.findById(id)
   }
 
   async function findAll () {
-    return await ClientModel.findAll()
+    return await ServiceModel.findAll()
   }
 
-  async function findByRut (rut) {
-    const result = await ClientModel.findAll({
+  async function deleteById (id) {
+    return await ServiceModel.destroy({
       where: {
-        rut
-      }
-    })
-    return result
-  }
-
-  function findByEmail (email) {
-    return ClientModel.findOne({
-      where: {
-        email
+        id
       }
     })
   }
@@ -48,7 +39,6 @@ module.exports = function setupClient (ClientModel) {
     createOrUpdate,
     findById,
     findAll,
-    findByRut,
-    findByEmail
+    deleteById
   }
 }

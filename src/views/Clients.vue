@@ -190,7 +190,7 @@ export default {
     })
 
     const dt = ref()
-    const clients = ref()
+    const clients = ref([])
     const client = ref({})
     const submitted = ref(false)
     const selectedClients = ref()
@@ -224,11 +224,14 @@ export default {
         client.value.city = client.value.city.value ? client.value.city.value : client.value.city
         client.value.phone = client.value.phone.value ? client.value.phone.value : client.value.phone
         client.value.rut = client.value.rut.value ? client.value.rut.value : client.value.rut
-        clientService.value.createClient(client.value).then(data => { console.log(data) })
+        clientService.value.createClient(client.value)
+          .then(data => { console.log(data) })
+          .finally(() => {
+            clientService.value.getClients().then(data => { clients.value = data })
+          })
 
         clientDialog.value = false
         client.value = {}
-        clientService.value.getClients().then(data => { clients.value = data })
       }
     }
     // Prepara y abre el modal de cliente para su edicion
@@ -243,10 +246,17 @@ export default {
     }
     // Elimina el cliente
     const deleteClient = (cliId) => {
-      clientService.value.deleteClient(cliId).then(data => { console.log(data) })
+      clientService.value.deleteClient(cliId)
+        .then(data => {
+          console.log(data)
+        })
+        .finally(() => {
+          console.log('Cliente Eliminado')
+          clientService.value.getClients()
+            .then(data => { clients.value = data })
+        })
       deleteClientDialog.value = false
       client.value = {}
-      console.log('Cliente Eliminado')
     }
     // Exporta un CSV con los clientes existentes
     const exportCSV = () => {
@@ -258,13 +268,14 @@ export default {
     }
     // Elimina los clientes selecionados
     const deleteSelectedClients = () => {
-      console.log(selectedClients.value)
       selectedClients.value.forEach(cli => {
-        clientService.value.deleteClient(cli.id).then(data => { console.log(data) })
+        clientService.value.deleteClient(cli.id)
+          .then(data => { console.log(data) })
       })
       deleteClientsDialog.value = false
       selectedClients.value = null
-      clientService.value.getClients().then(data => { clients.value = data })
+      clientService.value.getClients()
+        .then(data => { clients.value = data })
       console.log('Clientes Eliminados')
     }
 

@@ -7,20 +7,45 @@
       <div class="card">
         <Toolbar class="p-mb-4">
           <template #left>
-            <Button label="Nuevo" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openNew" />
-            <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger p-ml-2" @click="confirmDeleteSelected" :disabled="!selectedServices || !selectedServices.length" />
+            <Button
+              label="Nuevo"
+              icon="pi pi-plus"
+              class="p-button-success p-mr-2"
+              @click="openNew"
+            />
+            <Button
+              label="Eliminar"
+              icon="pi pi-trash"
+              class="p-button-danger p-ml-2"
+              @click="confirmDeleteSelected"
+              :disabled="!selectedServices || !selectedServices.length"
+            />
           </template>
 
           <template #right>
-            <Button label="Exportar" icon="pi pi-upload" class="p-button-help" @click="exportCSV($event)"  />
+            <Button
+              label="Exportar"
+              icon="pi pi-upload"
+              class="p-button-help"
+              @click="exportCSV($event)"
+            />
           </template>
         </Toolbar>
 
 <!-- Services Table -->
-        <DataTable ref="dt" :value="services" v-model:selection="selectedServices" dataKey="id"
-          :paginator="true" :rows="5" :filters="filters"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[5,10,25]"
-          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} servicios" responsiveLayout="scroll">
+        <DataTable
+          ref="dt"
+          dataKey="id"
+          :rows="5"
+          :value="services"
+          :paginator="true"
+          :filters="filters"
+          :rowsPerPageOptions="[5,10,25]"
+          v-model:selection="selectedServices"
+          responsiveLayout="scroll"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} servicios"
+        >
           <template #header>
             <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
               <h4 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Servicios</h4>
@@ -32,9 +57,9 @@
           </template>
 
           <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-          <Column field="id" header="Código" :sortable="true" style="max-width:4rem">>
+          <Column field="id" header="Código" :sortable="true" style="max-width:3rem">>
             <template #body="slotProps">
-              {{(slotProps.data.id).padStart(6, '000000')}}
+              {{slotProps.data.id}}
             </template>
           </Column>
           <Column field="name" header="Nombre" :sortable="true" style="max-width:8rem"></Column>
@@ -79,7 +104,7 @@
       <Dialog v-model:visible="deleteServiceDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
         <div class="confirmation-content">
           <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
-          <span v-if="service">¿Estás seguro que quieres eliminar <b>{{service.name}}</b>?</span>
+          <span v-if="service">¿Estás seguro que quieres eliminar el servicio de <b>{{service.name}}</b>?</span>
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteServiceDialog = false"/>
@@ -91,7 +116,7 @@
       <Dialog v-model:visible="deleteServicesDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
         <div class="confirmation-content">
           <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
-          <span v-if="client">¿Estás seguro que quieres eliminar los servicios seleccionados?</span>
+          <span v-if="service">¿Estás seguro que quieres eliminar los servicios seleccionados?</span>
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteServicesDialog = false"/>
@@ -105,7 +130,6 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
-import { useToast } from 'primevue/usetoast'
 import ServiceService from '../service/ServiceService'
 
 export default {
@@ -118,9 +142,8 @@ export default {
       serviceService.value.getServices().then(data => { services.value = data })
     })
 
-    const toast = useToast()
     const dt = ref()
-    const services = ref()
+    const services = ref([])
     const serviceDialog = ref(false)
     const deleteServiceDialog = ref(false)
     const deleteServicesDialog = ref(false)
@@ -132,80 +155,99 @@ export default {
       global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
 
+    // Agrega el formato de moneda al campo
     const formatCurrency = (value) => {
       if (value) { return value.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' }) }
     }
+    // Abre el modal y prepara un objeto vacío para un nuevo servicio
     const openNew = () => {
       service.value = {}
       submitted.value = false
       serviceDialog.value = true
     }
+    // Esconde el modal de servicio
     const hideDialog = () => {
       serviceDialog.value = false
       submitted.value = false
     }
+    // Funcion para crear o editar un servicio
     const saveService = () => {
       submitted.value = true
-
       if (service.value.name.trim()) {
-        if (service.value.id) {
-          services.value[findIndexById(service.value.id)] = service.value
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Servicio Actualizado', life: 3000 })
-        } else {
-          service.value.id = createId()
-          service.value.price = service.value.price.value ? service.value.price.value : service.value.price
-          services.value.push(service.value)
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Servicio Creado', life: 3000 })
+        service.value.name = service.value.name.value ? service.value.name.value : service.value.name
+        service.value.price = service.value.price.value ? service.value.price.value : service.value.price
+        service.value.description = service.value.description.value ? service.value.description.value : service.value.description
+        try {
+          serviceService.value.createService(service.value)
+            .then(data => { console.log(data) })
+            .finally(() => {
+              serviceService.value.getServices().then(data => { services.value = data })
+            })
+        } catch (err) {
+          console.error(err)
         }
-
         serviceDialog.value = false
         service.value = {}
       }
     }
+
+    // Prepara y abre el modal de servicio para su edicion
     const editService = (serv) => {
       service.value = { ...serv }
       serviceDialog.value = true
     }
+    // Prepara el modal de confirmación de eliminacion de servicio
     const confirmDeleteService = (serv) => {
       service.value = serv
       deleteServiceDialog.value = true
     }
+    // Elimina el servicio
     const deleteService = () => {
-      services.value = services.value.filter(val => val.id !== service.value.id)
+      try {
+        serviceService.value.deleteService(service.value.id)
+          .then(data => {
+            console.log(data)
+          })
+          .finally(() => {
+            console.log('Servicio Eliminado')
+            serviceService.value.getServices()
+              .then(data => { services.value = data })
+          })
+      } catch (err) {
+        console.error(err)
+      }
       deleteServiceDialog.value = false
       service.value = {}
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Servicio Eliminado', life: 3000 })
     }
-    const findIndexById = (id) => {
-      let index = -1
-      for (let i = 0; i < services.value.length; i++) {
-        if (services.value[i].id === id) {
-          index = i
-          break
-        }
-      }
 
-      return index
-    }
-    const createId = () => {
-      let id = ''
-      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-      for (var i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length))
-      }
-      return id
-    }
+    // Exporta un CSV con los servicios existentes
     const exportCSV = () => {
       dt.value.exportCSV()
     }
+
+    // Abre el modal y pide confirmación para eliminar los servicios seleccionados
     const confirmDeleteSelected = () => {
       deleteServicesDialog.value = true
     }
+    // Elimina los servicios selecionados
     const deleteSelectedServices = () => {
-      services.value = services.value.filter(val => !selectedServices.value.includes(val))
+      try {
+        selectedServices.value.forEach(serv => {
+          serviceService.value.deleteService(serv.id)
+            .then(data => { console.log(data) })
+        })
+      } catch (err) {
+        console.error(err)
+      }
       deleteServicesDialog.value = false
       selectedServices.value = null
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Servicio Eliminado', life: 3000 })
+      try {
+        serviceService.value.getServices()
+          .then(data => { services.value = data })
+        console.log('Servicios Eliminados')
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     return {
@@ -225,8 +267,6 @@ export default {
       editService,
       confirmDeleteService,
       deleteService,
-      findIndexById,
-      createId,
       exportCSV,
       confirmDeleteSelected,
       deleteSelectedServices

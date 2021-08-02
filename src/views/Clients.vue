@@ -186,11 +186,7 @@ export default {
   },
   setup () {
     onMounted(() => {
-      try {
-        clientService.value.getClients().then(data => { clients.value = data })
-      } catch (err) {
-        console.error(err)
-      }
+      clientService.value.getClients().then(data => { clients.value = data })
     })
 
     const dt = ref()
@@ -216,7 +212,7 @@ export default {
       clientDialog.value = false
       submitted.value = false
     }
-    // Funcion para crear o guardar
+    // Funcion para crear o editar
     const saveClient = () => {
       submitted.value = true
       if (client.value.contactName.trim()) {

@@ -4,7 +4,7 @@ module.exports = function setupService (ServiceModel) {
   async function createOrUpdate (serv) {
     const cond = {
       where: {
-        id: serv.id
+        name: serv.name
       }
     }
 
@@ -20,7 +20,7 @@ module.exports = function setupService (ServiceModel) {
   }
 
   async function findById (id) {
-    return ServiceModel.findById(id)
+    return ServiceModel.findByPk(id)
   }
 
   async function findAll () {

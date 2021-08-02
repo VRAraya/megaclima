@@ -7,20 +7,45 @@
       <div class="card">
         <Toolbar class="p-mb-4">
           <template #left>
-            <Button label="Nuevo" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openNew" />
-            <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger p-ml-2" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+            <Button
+              label="Nuevo"
+              icon="pi pi-plus"
+              class="p-button-success p-mr-2"
+              @click="openNew"
+            />
+            <Button
+              label="Eliminar"
+              icon="pi pi-trash"
+              class="p-button-danger p-ml-2"
+              @click="confirmDeleteSelected"
+              :disabled="!selectedProducts || !selectedProducts.length"
+            />
           </template>
 
           <template #right>
-            <Button label="Exportar" icon="pi pi-upload" class="p-button-help" @click="exportCSV($event)"  />
+            <Button
+              label="Exportar"
+              icon="pi pi-upload"
+              class="p-button-help"
+              @click="exportCSV($event)"
+            />
           </template>
         </Toolbar>
 
 <!-- Product Table -->
-        <DataTable ref="dt" :value="products" v-model:selection="selectedProducts" dataKey="id"
-          :paginator="true" :rows="5" :filters="filters"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[5,10,25]"
-          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos" responsiveLayout="scroll">
+        <DataTable
+          ref="dt"
+          dataKey="id"
+          :rows="5"
+          :value="products"
+          :paginator="true"
+          :filters="filters"
+          :rowsPerPageOptions="[5,10,25]"
+          v-model:selection="selectedProducts"
+          responsiveLayout="scroll"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+        >
           <template #header>
             <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
               <h4 class="p-mb-2 p-m-md-0 p-as-md-center">Administrador de Productos</h4>
@@ -34,7 +59,7 @@
           <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
           <Column field="id" header="Código" :sortable="true" style="max-width:4rem">>
             <template #body="slotProps">
-              {{(slotProps.data.id).padStart(6, '000000')}}
+              {{slotProps.data.id}}
             </template>
           </Column>
           <Column field="name" header="Nombre" :sortable="true" style="max-width:8rem"></Column>
@@ -101,7 +126,7 @@
       <Dialog v-model:visible="deleteProductDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
         <div class="confirmation-content">
           <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
-          <span v-if="product">¿Estás seguro que quieres eliminar <b>{{product.name}}</b>?</span>
+          <span v-if="product">¿Estás seguro que quieres eliminar el producto <b>{{product.name}}</b>?</span>
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false"/>
@@ -127,7 +152,6 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
-import { useToast } from 'primevue/usetoast'
 import ProductService from '../service/ProductService'
 
 export default {
@@ -140,9 +164,8 @@ export default {
       productService.value.getProducts().then(data => { products.value = data })
     })
 
-    const toast = useToast()
     const dt = ref()
-    const products = ref()
+    const products = ref([])
     const productDialog = ref(false)
     const deleteProductDialog = ref(false)
     const deleteProductsDialog = ref(false)
@@ -154,80 +177,100 @@ export default {
       global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
 
+    // Agrega el formato de moneda al campo
     const formatCurrency = (value) => {
       if (value) { return value.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' }) }
     }
+    // Abre el modal y prepara un objeto vacío para un nuevo producto
     const openNew = () => {
       product.value = {}
       submitted.value = false
       productDialog.value = true
     }
+    // Esconde el modal de producto
     const hideDialog = () => {
       productDialog.value = false
       submitted.value = false
     }
+    // Funcion para crear o editar un producto
     const saveProduct = () => {
       submitted.value = true
 
       if (product.value.name.trim()) {
-        if (product.value.id) {
-          products.value[findIndexById(product.value.id)] = product.value
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Producto Actualizado', life: 3000 })
-        } else {
-          product.value.id = createId()
-          product.value.brandName = product.value.brandName.value ? product.value.brandName.value : product.value.brandName
-          products.value.push(product.value)
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Producto Creado', life: 3000 })
+        product.value.name = product.value.name.value ? product.value.name.value : product.value.name
+        product.value.price = product.value.price.value ? product.value.price.value : product.value.price
+        product.value.cost = product.value.cost.value ? product.value.cost.value : product.value.cost
+        product.value.description = product.value.description.value ? product.value.description.value : product.value.description
+        try {
+          productService.value.createProduct(product.value)
+            .then(data => { console.log(data) })
+            .finally(() => {
+              productService.value.getProducts().then(data => { products.value = data })
+            })
+        } catch (err) {
+          console.error(err)
         }
-
         productDialog.value = false
         product.value = {}
       }
     }
+    // Prepara y abre el modal de producto para su edicion
     const editProduct = (prod) => {
       product.value = { ...prod }
       productDialog.value = true
     }
+    // Prepara el modal de confirmación de eliminacion de producto
     const confirmDeleteProduct = (prod) => {
       product.value = prod
       deleteProductDialog.value = true
     }
+    // Elimina el producto
     const deleteProduct = () => {
-      products.value = products.value.filter(val => val.id !== product.value.id)
+      try {
+        productService.value.deleteProduct(product.value.id)
+          .then(data => {
+            console.log(data)
+          })
+          .finally(() => {
+            console.log('Producto Eliminado')
+            productService.value.getProducts()
+              .then(data => { products.value = data })
+          })
+      } catch (err) {
+        console.error(err)
+      }
       deleteProductDialog.value = false
       product.value = {}
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Producto Eliminado', life: 3000 })
     }
-    const findIndexById = (id) => {
-      let index = -1
-      for (let i = 0; i < products.value.length; i++) {
-        if (products.value[i].id === id) {
-          index = i
-          break
-        }
-      }
 
-      return index
-    }
-    const createId = () => {
-      let id = ''
-      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-      for (var i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length))
-      }
-      return id
-    }
+    // Exporta un CSV con los productos existentes
     const exportCSV = () => {
       dt.value.exportCSV()
     }
+
+    // Abre el modal y pide confirmación para eliminar los servicios seleccionados
     const confirmDeleteSelected = () => {
       deleteProductsDialog.value = true
     }
+    // Elimina los productos selecionados
     const deleteSelectedProducts = () => {
-      products.value = products.value.filter(val => !selectedProducts.value.includes(val))
+      try {
+        selectedProducts.value.forEach(serv => {
+          productService.value.deleteProduct(serv.id)
+            .then(data => { console.log(data) })
+        })
+      } catch (err) {
+        console.error(err)
+      }
       deleteProductsDialog.value = false
       selectedProducts.value = null
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Productos Eliminados', life: 3000 })
+      try {
+        productService.value.getProducts()
+          .then(data => { products.value = data })
+        console.log('Productos Eliminados')
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     return {
@@ -247,8 +290,6 @@ export default {
       editProduct,
       confirmDeleteProduct,
       deleteProduct,
-      findIndexById,
-      createId,
       exportCSV,
       confirmDeleteSelected,
       deleteSelectedProducts

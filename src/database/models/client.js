@@ -9,7 +9,8 @@ module.exports = function setupClientModel (config) {
   return sequelize.define('clients', {
     contactName: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     brandName: {
       type: Sequelize.STRING

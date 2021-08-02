@@ -58,9 +58,9 @@
 
           <Column selectionMode="multiple" style="width: 1rem" :exportable="false"></Column>
           <Column :expander="true" headerStyle="width: 1rem" />
-          <Column field="id" header="Código" :sortable="true" style="max-width:4rem">>
+          <Column field="code" header="Código" :sortable="true" style="max-width:4rem">>
             <template #body="slotProps">
-              {{(slotProps.data.id).padStart(6, '000000')}}
+              {{slotProps.data.code}}
             </template>
           </Column>
           <Column field="description" header="Descripción" style="max-width:8rem"></Column>
@@ -81,7 +81,12 @@
           </Column>
           <Column field="client" header="Contacto" :sortable="true" style="max-width:5rem">>
             <template #body="slotProps">
-              {{slotProps.data.client.contactName}}
+              {{slotProps.data['client.contactName']}}
+            </template>
+          </Column>
+          <Column field="paymentStatus" header="Estado" :sortable="true" style="max-width:8rem">>
+            <template #body="slotProps">
+              <span :class="'p-badge status-' + (slotProps.data.paymentStatus ? slotProps.data.paymentStatus.toLowerCase() : '')">{{slotProps.data.paymentStatus}}</span>
             </template>
           </Column>
           <template #expansion="slotProps">
@@ -151,7 +156,7 @@
               </DataTable>
             </div>
           </template>
-          <Column :exportable="false">
+          <Column header="Acciones" :exportable="false">
             <template #body="slotProps">
               <Button icon="pi pi-money-bill" class="p-button-rounded p-button-info mr-1" @click="payOrder(slotProps.data)" />
               <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-1" @click="editOrder(slotProps.data)" />
@@ -191,7 +196,7 @@
             />
           </div>
         </div>
-        <div class="p-field mb-2">
+        <!-- <div class="p-field mb-2">
           <label class="mb-2" for="products">Productos a vender</label>
           <MultiSelect
             id="products"
@@ -213,35 +218,10 @@
               </div>
             </template>
           </MultiSelect>
-        </div>
+        </div> -->
         <div class="p-field mb-2">
-          <label class="mb-2" for="businessName">Razón Social</label>
-          <InputText id="businessName" v-model.trim="order.businessName" autofocus :class="{'p-invalid': submitted && !order.businessName}" />
-        </div>
-        <div class="p-field mb-2">
-          <label class="mb-2" for="email">Email</label>
-          <InputText id="email" v-model="order.email" required="true" autofocus :class="{'p-invalid': submitted && !order.email}" />
-          <small class="p-error" v-if="submitted && !order.email">Email es requerido.</small>
-        </div>
-        <div class="p-field mb-2">
-          <label class="mb-2" for="address">Dirección</label>
-          <Textarea id="address" v-model.trim="order.address" rows="2" cols="20" required="true" autofocus :class="{'p-invalid': submitted && !order.address}" />
-          <small class="p-error" v-if="submitted && !order.address">La dirección es requerida.</small>
-        </div>
-        <div class="p-field mb-2">
-          <label class="mb-2" for="city">Ciudad</label>
-          <InputText id="city" v-model.trim="order.city" required="true" autofocus :class="{'p-invalid': submitted && !order.city}" />
-          <small class="p-error" v-if="submitted && !order.city">La ciudad es requerida.</small>
-        </div>
-        <div class="p-field mb-2 p-col">
-          <label class="mb-2" for="phone">Teléfono</label>
-          <InputText id="phone" v-model.trim="order.phone" required="true" autofocus :class="{'p-invalid': submitted && !order.phone}" />
-          <small class="p-error" v-if="submitted && !order.phone">Teléfono es requerido.</small>
-        </div>
-        <div class="p-field mb-2 p-col">
-          <label class="mb-2" for="rut">Rut</label>
-          <InputText id="rut" v-model.trim="order.rut" required="true" autofocus :class="{'p-invalid': submitted && !order.rut}" />
-          <small class="p-error" v-if="submitted && !order.rut">Rut es requerido.</small>
+          <label class="mb-2" for="description">Descripción</label>
+          <Textarea id="description" v-model="order.description" rows="3" cols="20" />
         </div>
 
         <template class="p-text-center" #footer>
@@ -251,48 +231,48 @@
       </Dialog>
 
 <!-- New Client Modal -->
-      <Dialog v-model:visible="clientDialog" :style="{width: '450px'}" header="Nuevo Cliente" :modal="true" class="p-fluid">
+      <Dialog v-model:visible="newClientDialog" :style="{width: '450px'}" header="Nuevo Cliente" :modal="true" class="p-fluid">
         <div class="p-field mb-2">
           <label class="mb-2" for="contactName">Contacto</label>
-          <InputText id="contactName" v-model.trim="client.contactName" required="true" autofocus :class="{'p-invalid': submittedClient && !client.contactName}" />
-          <small class="p-error" v-if="submittedClient && !client.contactName">Nombre de contacto es requerido.</small>
+          <InputText id="contactName" v-model.trim="newClient.contactName" required="true" autofocus :class="{'p-invalid': submittedClient && !newClient.contactName}" />
+          <small class="p-error" v-if="submittedClient && !newClient.contactName">Nombre de contacto es requerido.</small>
         </div>
         <div class="p-field mb-2">
           <label class="mb-2" for="brandName">Empresa</label>
-          <InputText id="brandName" v-model.trim="client.brandName" autofocus :class="{'p-invalid': submittedClient && !client.brandName}" />
+          <InputText id="brandName" v-model.trim="newClient.brandName" autofocus :class="{'p-invalid': submittedClient && !newClient.brandName}" />
         </div>
         <div class="p-field mb-2">
           <label class="mb-2" for="businessName">Razón Social</label>
-          <InputText id="businessName" v-model.trim="client.businessName" autofocus :class="{'p-invalid': submittedClient && !client.businessName}" />
+          <InputText id="businessName" v-model.trim="newClient.businessName" autofocus :class="{'p-invalid': submittedClient && !newClient.businessName}" />
         </div>
         <div class="p-field mb-2">
           <label class="mb-2" for="email">Email</label>
-          <InputText id="email" v-model="client.email" required="true" autofocus :class="{'p-invalid': submittedClient && !client.email}" />
-          <small class="p-error" v-if="submittedClient && !client.email">Email es requerido.</small>
+          <InputText id="email" v-model="newClient.email" required="true" autofocus :class="{'p-invalid': submittedClient && !newClient.email}" />
+          <small class="p-error" v-if="submittedClient && !newClient.email">Email es requerido.</small>
         </div>
         <div class="p-field mb-2">
           <label class="mb-2" for="address">Dirección</label>
-          <Textarea id="address" v-model.trim="client.address" rows="2" cols="20" required="true" autofocus :class="{'p-invalid': submittedClient && !client.address}" />
-          <small class="p-error" v-if="submittedClient && !client.address">La dirección es requerida.</small>
+          <Textarea id="address" v-model.trim="newClient.address" rows="2" cols="20" required="true" autofocus :class="{'p-invalid': submittedClient && !newClient.address}" />
+          <small class="p-error" v-if="submittedClient && !newClient.address">La dirección es requerida.</small>
         </div>
         <div class="p-field mb-2">
           <label class="mb-2" for="city">Ciudad</label>
-          <InputText id="city" v-model.trim="client.city" required="true" autofocus :class="{'p-invalid': submittedClient && !client.city}" />
-          <small class="p-error" v-if="submittedClient && !client.city">La ciudad es requerida.</small>
+          <InputText id="city" v-model.trim="newClient.city" required="true" autofocus :class="{'p-invalid': submittedClient && !newClient.city}" />
+          <small class="p-error" v-if="submittedClient && !newClient.city">La ciudad es requerida.</small>
         </div>
         <div class="p-field mb-2 p-col">
           <label class="mb-2" for="phone">Teléfono</label>
-          <InputText id="phone" v-model.trim="client.phone" required="true" autofocus :class="{'p-invalid': submittedClient && !client.phone}" />
-          <small class="p-error" v-if="submittedClient && !client.phone">Teléfono es requerido.</small>
+          <InputText id="phone" v-model.trim="newClient.phone" required="true" autofocus :class="{'p-invalid': submittedClient && !newClient.phone}" />
+          <small class="p-error" v-if="submittedClient && !newClient.phone">Teléfono es requerido.</small>
         </div>
         <div class="p-field mb-2 p-col">
           <label class="mb-2" for="rut">Rut</label>
-          <InputText id="rut" v-model.trim="client.rut" required="true" autofocus :class="{'p-invalid': submittedClient && !client.rut}" />
-          <small class="p-error" v-if="submittedClient && !client.rut">Rut es requerido.</small>
+          <InputText id="rut" v-model.trim="newClient.rut" required="true" autofocus :class="{'p-invalid': submittedClient && !newClient.rut}" />
+          <small class="p-error" v-if="submittedClient && !newClient.rut">Rut es requerido.</small>
         </div>
 
         <template class="p-text-center" #footer>
-          <Button label="Cancelar" icon="pi pi-times" class="p-button-raised p-button-danger" @click="hideClientDialog"/>
+          <Button label="Cancelar" icon="pi pi-times" class="p-button-raised p-button-danger" @click="hideNewClientDialog"/>
           <Button label="Guardar" icon="pi pi-check" class="p-button-raised p-button-success" @click="saveClient" />
         </template>
       </Dialog>
@@ -359,14 +339,14 @@ export default {
     onMounted(() => {
       orderService.value.getOrders().then(data => { orders.value = data })
       productService.value.getProducts().then(data => { productsOptions.value = data })
-      clientService.value.getClients().then(data => { clients.value = data.reverse() })
+      clientService.value.getClients().then(data => { clientsOptions.value = data })
     })
 
     const dt = ref()
-    const orders = ref()
-    const clients = ref()
+    const orders = ref([])
+    const clientsOptions = ref([])
     const order = ref({})
-    const client = ref({})
+    const newClient = ref({})
     const toast = useToast()
     const selectedOrders = ref()
     const submitted = ref(false)
@@ -376,7 +356,7 @@ export default {
     const filteredClients = ref()
     const productsOptions = ref()
     const orderDialog = ref(false)
-    const clientDialog = ref(false)
+    const newClientDialog = ref(false)
     const payOrderDialog = ref(false)
     const deleteOrderDialog = ref(false)
     const deleteOrdersDialog = ref(false)
@@ -384,19 +364,27 @@ export default {
     const clientService = ref(new ClientService())
     const productService = ref(new ProductService())
 
+    const statuses = ref([
+      { label: 'Rechazada', value: 'rejected' },
+      { label: 'Pendiente', value: 'pending' },
+      { label: 'Pagada', value: 'paid' }
+    ])
+
+    const iva = ref(0.19)
+
     const onRowExpand = (event) => {
-      toast.add({ severity: 'info', summary: 'Cotización Expandida', detail: event.data.name, life: 3000 })
+      console.log('Cotización Expandida')
     }
     const onRowCollapse = (event) => {
-      toast.add({ severity: 'success', summary: 'Cotización Colapsada', detail: event.data.name, life: 3000 })
+      console.log('Cotización Colapsada')
     }
     const expandAll = () => {
-      expandedRows.value = order.value.filter(o => o.id)
-      toast.add({ severity: 'success', summary: 'Todas las filas expandidas', life: 3000 })
+      expandedRows.value = order.value.filter(ord => ord.id)
+      console.log('Todas las filas expandidas')
     }
     const collapseAll = () => {
       expandedRows.value = null
-      toast.add({ severity: 'success', summary: 'Todas las filas colapsadas', life: 3000 })
+      console.log('Todas las filas colapsadas')
     }
     const filters = ref({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS }
@@ -405,13 +393,23 @@ export default {
     const formatCurrency = (value) => {
       if (value) { return value.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' }) }
     }
-    const openNewClient = () => {
-      client.value = {}
-      submittedClient.value = false
-      clientDialog.value = true
+
+    const formatStatus = (statusValue) => {
+      statuses.value.forEach(sta => {
+        if (sta.value === statusValue) {
+          console.log(statusValue)
+          console.log(sta.label)
+          return sta.label
+        }
+      })
     }
-    const hideClientDialog = () => {
-      clientDialog.value = false
+    const openNewClient = () => {
+      newClient.value = {}
+      submittedClient.value = false
+      newClientDialog.value = true
+    }
+    const hideNewClientDialog = () => {
+      newClientDialog.value = false
       submittedClient.value = false
     }
     const openNew = () => {
@@ -425,16 +423,26 @@ export default {
     }
     const saveOrder = () => {
       submitted.value = true
-
-      if (order.value.contactName.trim()) {
-        if (order.value.id) {
-          orders.value[findIndexById(order.value.id)] = order.value
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Cotizacion Actualizada', life: 3000 })
+      console.log(order.value.client)
+      if (order.value.client.contactName.trim()) {
+        if (order.value.code) {
+          console.log('Paso por aqui')
         } else {
-          order.value.id = createId()
-          order.value.brandName = order.value.brandName.value ? order.value.brandName.value : order.value.brandName
-          orders.value.push(order.value)
-          toast.add({ severity: 'success', summary: 'Successful', detail: 'Cotizacion Creada', life: 3000 })
+          order.value.code = createCode()
+          order.value.netValue = 444
+          order.value.subTotalValue = 444
+          order.value.totalValue = calculateTotalValue(444)
+          order.value.description = order.value.description.value ? order.value.description.value : order.value.description
+          order.value.clientId = order.value.client.id
+          try {
+            orderService.value.createOrder(order.value)
+              .then(data => { console.log(data) })
+              .finally(() => {
+                orderService.value.getOrders().then(data => { orders.value = data })
+              })
+          } catch (err) {
+            console.error(err)
+          }
         }
 
         orderDialog.value = false
@@ -442,26 +450,51 @@ export default {
       }
     }
 
+    // Funcion para crear un nuevo cliente
     const saveClient = () => {
-      submittedClient.value = true
-
-      if (client.value.contactName.trim()) {
-        client.value.id = createId()
-        client.value.brandName = client.value.brandName.value ? client.value.brandName.value : client.value.brandName
-        clients.value.push(client.value)
-        toast.add({ severity: 'success', summary: 'Successful', detail: 'Cliente Creado', life: 3000 })
-
-        clientDialog.value = false
-        client.value = {}
+      submitted.value = true
+      if (newClient.value.contactName.trim()) {
+        newClient.value.contactName = newClient.value.contactName.value ? newClient.value.contactName.value : newClient.value.contactName
+        newClient.value.brandName = newClient.value.brandName.value ? newClient.value.brandName.value : newClient.value.brandName
+        newClient.value.businessName = newClient.value.businessName.value ? newClient.value.businessName.value : newClient.value.businessName
+        newClient.value.email = newClient.value.email.value ? newClient.value.email.value : newClient.value.email
+        newClient.value.address = newClient.value.address.value ? newClient.value.address.value : newClient.value.address
+        newClient.value.city = newClient.value.city.value ? newClient.value.city.value : newClient.value.city
+        newClient.value.phone = newClient.value.phone.value ? newClient.value.phone.value : newClient.value.phone
+        newClient.value.rut = newClient.value.rut.value ? newClient.value.rut.value : newClient.value.rut
+        try {
+          clientService.value.createClient(newClient.value)
+            .then(data => { console.log(data) })
+            .finally(() => {
+              clientService.value.getClients().then(data => { clientsOptions.value = data })
+            })
+        } catch (err) {
+          console.error(err)
+        }
+        newClientDialog.value = false
+        newClient.value = {}
       }
+    }
+
+    const calculateNetValue = (ord) => {
+      let netValue = 0
+      ord.value.products.foreEach(prod => {
+        netValue += prod.price
+      })
+      return netValue
+    }
+
+    const calculateTotalValue = (subTotalValue) => {
+      const totalValue = subTotalValue += subTotalValue * iva.value
+      return totalValue
     }
 
     const searchClient = (event) => {
       setTimeout(() => {
         if (!event.query.trim().length) {
-          filteredClients.value = [...clients.value]
+          filteredClients.value = [...clientsOptions.value]
         } else {
-          filteredClients.value = clients.value.filter((cli) => {
+          filteredClients.value = clientsOptions.value.filter((cli) => {
             return cli.contactName.toLowerCase().startsWith(event.query.toLowerCase())
           })
         }
@@ -490,11 +523,23 @@ export default {
       order.value = ord
       deleteOrderDialog.value = true
     }
+    // Elimina la cotizacion
     const deleteOrder = () => {
-      orders.value = orders.value.filter(val => val.id !== order.value.id)
+      try {
+        orderService.value.deleteOrder(order.value.code)
+          .then(data => {
+            console.log(data)
+          })
+          .finally(() => {
+            console.log('Cotizacion Eliminada')
+            orderService.value.getOrders()
+              .then(data => { orders.value = data })
+          })
+      } catch (err) {
+        console.error(err)
+      }
       deleteOrderDialog.value = false
       order.value = {}
-      toast.add({ severity: 'success', summary: 'Successful', detail: 'Cotización Eliminada', life: 3000 })
     }
     const findIndexById = (id) => {
       let index = -1
@@ -507,7 +552,7 @@ export default {
 
       return index
     }
-    const createId = () => {
+    const createCode = () => {
       let id = ''
       var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
       for (var i = 0; i < 5; i++) {
@@ -532,12 +577,13 @@ export default {
       dt,
       order,
       orders,
-      client,
+      newClient,
       openNew,
-      clients,
       filters,
+      statuses,
       payOrder,
-      createId,
+      calculateNetValue,
+      createCode,
       saveOrder,
       editOrder,
       expandAll,
@@ -551,18 +597,20 @@ export default {
       onRowExpand,
       searchClient,
       expandedRows,
-      clientDialog,
+      newClientDialog,
       openNewClient,
       findIndexById,
+      formatStatus,
       onRowCollapse,
       selectedOrders,
       selectedClient,
       payOrderDialog,
       formatCurrency,
+      clientsOptions,
       productsOptions,
       submittedClient,
       filteredClients,
-      hideClientDialog,
+      hideNewClientDialog,
       deleteOrderDialog,
       deleteOrdersDialog,
       confirmDeleteOrder,
@@ -621,36 +669,48 @@ export default {
 
   .p-multiselect {
     width: 100%;
-}
+  }
 
-.quantity-option {
-  height: 100%;
-  width: 20px;
-}
+  .quantity-option {
+    height: 100%;
+    width: 20px;
+  }
 
-::v-deep(.multiselect-custom) {
-    .p-multiselect-label:not(.p-placeholder) {
-        padding-top: .25rem;
-        padding-bottom: .25rem;
-    }
+  .status-pending {
+    background-color: #5bc0de;
+  }
 
-    .product-item-value {
-        padding: .25rem .5rem;
-        border-radius: 3px;
-        display: inline-flex;
-        margin-right: .5rem;
-        background-color: var(--primary-color);
-        color: var(--primary-color-text);
+  .status-rejected {
+    background-color: #d9534f;
+  }
 
-        img.flag {
-            width: 17px;
-        }
-    }
-}
+  .status-paid {
+    background-color: #5cb85c;
+  }
 
-@media screen and (max-width: 640px) {
-    .p-multiselect {
-        width: 100%;
-    }
-}
+  ::v-deep(.multiselect-custom) {
+      .p-multiselect-label:not(.p-placeholder) {
+          padding-top: .25rem;
+          padding-bottom: .25rem;
+      }
+
+      .product-item-value {
+          padding: .25rem .5rem;
+          border-radius: 3px;
+          display: inline-flex;
+          margin-right: .5rem;
+          background-color: var(--primary-color);
+          color: var(--primary-color-text);
+
+          img.flag {
+              width: 17px;
+          }
+      }
+  }
+
+  @media screen and (max-width: 640px) {
+      .p-multiselect {
+          width: 100%;
+      }
+  }
 </style>

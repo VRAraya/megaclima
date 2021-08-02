@@ -1,54 +1,68 @@
 'use strict'
 
-module.exports = function setupClient (ClientModel) {
-  async function createOrUpdate (client) {
+module.exports = function setupOrder (OrderModel, ClientModel) {
+  async function createOrUpdate (ord) {
     const cond = {
       where: {
-        contactName: client.contactName
+        code: ord.code
       }
     }
 
-    const existingClient = await ClientModel.findOne(cond)
+    const existingOrder = await OrderModel.findOne(cond)
 
-    if (existingClient) {
-      const updated = await ClientModel.update(client, cond)
-      return updated ? ClientModel.findOne(cond) : existingClient
+    if (existingOrder) {
+      const updated = await OrderModel.update(ord, cond)
+      return updated ? OrderModel.findOne(cond) : existingOrder
     }
 
-    const result = await ClientModel.create(client)
+    const result = await OrderModel.create(ord)
     return result.toJSON()
   }
 
-  async function findById (id) {
-    return ClientModel.findById(id)
+  async function findByCode (code) {
+    const cond = {
+      where: {
+        code
+      }
+    }
+    return OrderModel.findOne(cond)
   }
 
   async function findAll () {
-    return await ClientModel.findAll()
-  }
-
-  async function findByRut (rut) {
-    const result = await ClientModel.findAll({
-      where: {
-        rut
-      }
+    return await OrderModel.findAll({
+      include: {
+        model: ClientModel
+      },
+      raw: true
     })
-    return result
   }
 
-  function findByEmail (email) {
-    return ClientModel.findOne({
+  async function findAllSales () {
+    const cond = {
       where: {
-        email
+        paymentStatus: 'paid'
+      },
+      include: {
+        model: ClientModel
+      },
+      raw: true
+    }
+    return await OrderModel.findAll(cond)
+  }
+
+  async function deleteByCode (code) {
+    return await OrderModel.destroy({
+      where: {
+        code
       }
     })
   }
 
   return {
     createOrUpdate,
-    findById,
+    findByCode,
     findAll,
-    findByRut,
-    findByEmail
+    findAllSales,
+    deleteByCode
   }
 }

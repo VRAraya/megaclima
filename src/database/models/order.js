@@ -7,20 +7,32 @@ module.exports = function setupOrderModel (config) {
   const sequelize = setupDatabase(config)
 
   return sequelize.define('orders', {
+    code: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true
+    },
     description: {
       type: Sequelize.TEXT
     },
     billingNumber: {
       type: Sequelize.STRING,
-      allowNull: false
+      unique: true
     },
     paymentMethod: {
-      type: Sequelize.STRING,
-      allowNull: false
+      type: Sequelize.STRING
     },
     paymentStatus: {
       type: Sequelize.STRING,
-      allowNull: false
+      defaultValue: 'pending'
+    },
+    discount: {
+      type: Sequelize.FLOAT,
+      defaultValue: 0
+    },
+    additionalTax: {
+      type: Sequelize.FLOAT,
+      defaultValue: 0
     },
     netValue: {
       type: Sequelize.FLOAT

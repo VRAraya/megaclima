@@ -17,7 +17,7 @@ const config = {
 
 let services, Product
 export default class ProductService {
-  async createProduct (serv) {
+  async createProduct (prod) {
     if (!services) {
       console.log('Connecting to database')
       try {
@@ -30,7 +30,7 @@ export default class ProductService {
 
     try {
       console.log('Creating new product')
-      const result = await Product.createOrUpdate(serv)
+      const result = await Product.createOrUpdate(prod)
       return result
     } catch (err) {
       console.error(err)

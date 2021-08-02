@@ -24,6 +24,8 @@ import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmPopup from 'primevue/confirmpopup'
 import ToastService from 'primevue/toastservice'
 import MultiSelect from 'primevue/multiselect'
+import Chips from 'primevue/chips'
+import Badge from 'primevue/badge'
 
 import 'primeflex/primeflex.css'
 import 'primevue/resources/themes/saga-blue/theme.css'
@@ -57,4 +59,6 @@ app.component('Dropdown', Dropdown)
 app.component('RadioButton', RadioButton)
 app.component('InputNumber', InputNumber)
 app.component('MultiSelect', MultiSelect)
+app.component('Chips', Chips)
+app.component('Badge', Badge)
 app.mount('#app')

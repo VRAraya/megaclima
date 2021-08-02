@@ -37,7 +37,6 @@
           ref="dt"
           dataKey="id"
           v-model:selection="selectedOrders"
-          v-model:expandedRows="expandedRows"
           :value="orders"
           :paginator="true"
           :rows="5"
@@ -57,7 +56,6 @@
           </template>
 
           <Column selectionMode="multiple" style="width: 1rem" :exportable="false"></Column>
-          <Column :expander="true" headerStyle="width: 1rem" />
           <Column field="code" header="Código" :sortable="true" style="max-width:4rem">>
             <template #body="slotProps">
               {{slotProps.data.code}}
@@ -89,73 +87,6 @@
               <span :class="'p-badge status-' + (slotProps.data.paymentStatus ? slotProps.data.paymentStatus.toLowerCase() : '')">{{slotProps.data.paymentStatus}}</span>
             </template>
           </Column>
-          <template #expansion="slotProps">
-            <div class="products-subtable">
-              <DataTable :value="slotProps.data.products" responsiveLayout="scroll">
-                <template #header>
-                  <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-                    <h4>Productos asociados a la Cotización #{{(slotProps.data.id).padStart(6, '000000')}}</h4>
-                    <Button
-                      label="Agregar Producto"
-                      icon="pi pi-plus"
-                      class="p-button-success p-mr-2"
-                    />
-                  </div>
-                </template>
-                <Column field="id" header="Id" sortable></Column>
-                <Column field="name" header="Nombre" sortable></Column>
-                <Column field="brandName" header="Marca" sortable></Column>
-                <Column field="quantity" header="Cantidad" sortable>
-                  <template #body="slotProps" sortable>
-                    {{slotProps.data.quantity}}
-                  </template>
-                </Column>
-                <Column field="unit price" header="Precio Unitario" sortable>
-                  <template #body="slotProps" sortable>
-                    {{formatCurrency(slotProps.data.price)}}
-                  </template>
-                </Column>
-                <Column field="price" header="Precio Total" sortable>
-                  <template #body="slotProps" sortable>
-                    {{formatCurrency((slotProps.data.quantity)*(slotProps.data.price))}}
-                  </template>
-                </Column>
-                <Column headerStyle="width:4rem">
-                  <template #body>
-                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-info mr-1" />
-                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" />
-                  </template>
-                </Column>
-              </DataTable>
-            </div>
-            <div class="services-subtable">
-              <DataTable :value="slotProps.data.services" responsiveLayout="scroll">
-                <template #header>
-                  <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-                    <h4>Servicios asociados a la Cotización #{{(slotProps.data.id).padStart(6, '000000')}}</h4>
-                    <Button
-                      label="Agregar Servicio"
-                      icon="pi pi-plus"
-                      class="p-button-success mr-2"
-                    />
-                  </div>
-                </template>
-                <Column field="id" header="Id" sortable></Column>
-                <Column field="name" header="Nombre" sortable></Column>
-                <Column field="price" header="Precio Total" sortable>
-                  <template #body="slotProps" sortable>
-                    {{formatCurrency(slotProps.data.price)}}
-                  </template>
-                </Column>
-                <Column headerStyle="width:4rem">
-                  <template #body>
-                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-info mr-1" />
-                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" />
-                  </template>
-                </Column>
-              </DataTable>
-            </div>
-          </template>
           <Column header="Acciones" :exportable="false">
             <template #body="slotProps">
               <Button icon="pi pi-money-bill" class="p-button-rounded p-button-info mr-1" @click="payOrder(slotProps.data)" />
@@ -166,14 +97,15 @@
         </DataTable>
       </div>
 
-<!-- New&Edit Order Modal -->
-      <Dialog v-model:visible="orderDialog" :style="{width: '800px'}" header="Nueva Cotización" :modal="true" class="p-fluid">
+<!-- New Order Modal -->
+      <Dialog v-model:visible="newOrderDialog" :style="{width: '1200px'}" header="Nueva Cotización" :modal="true" class="p-fluid">
+        <!-- Seleccion de Cliente -->
         <div class="grid">
           <div class="col p-field">
             <label class="mb-2" for="client">Cliente</label>
             <AutoComplete
               id="client"
-              v-model="order.client"
+              v-model="selectedClient"
               :suggestions="filteredClients"
               @complete="searchClient($event)"
               :dropdown="true"
@@ -196,34 +128,120 @@
             />
           </div>
         </div>
-        <!-- <div class="p-field mb-2">
-          <label class="mb-2" for="products">Productos a vender</label>
-          <MultiSelect
-            id="products"
-            :filter="true"
-            :showToggleAll="false"
-            optionLabel="name"
-            v-model="order.products"
-            :options="productsOptions"
-            class="multiselect-custom"
-          >
-            <template #value="slotProps">
-              <div class="product-item product-item-value" v-for="option of slotProps.value" :key="option.id">
-                <div>{{option.name}}</div>
-              </div>
-            </template>
-            <template #option="slotProps">
-              <div class="product-item">
-                <div>{{slotProps.option.name}}</div>
-              </div>
-            </template>
-          </MultiSelect>
-        </div> -->
+        <!-- Seleccion de Productos -->
+        <div class="p-field mb-2">
+          <div class="grid mb-2">
+            <div class="col">
+              <label class="mb-2" for="products">Productos a vender</label>
+              <Dropdown
+                id="products"
+                v-model="selectedProduct"
+                :options="productsOptions"
+                optionLabel="name"
+                placeholder="Seleccionar Producto"
+              />
+            </div>
+            <div class="col flex align-items-end">
+              <InputNumber
+                id="quantity"
+                v-model="selectedProductQuantity"
+                showButtons
+                class="mr-3"
+                placeholder="Cantidad"
+                :min="1"
+              />
+              <Button
+                label="Agregar Producto"
+                icon="pi pi-plus"
+                class="p-button-success p-mr-2"
+                @click="addProductToOrder(selectedProduct, selectedProductQuantity)"
+              />
+            </div>
+          </div>
+          <!-- Seleccion de Servicios -->
+          <div class="grid mb-2">
+            <div class="col">
+              <label class="mb-2" for="products">Servicios a vender</label>
+              <Dropdown
+                id="services"
+                v-model="selectedService"
+                :options="servicesOptions"
+                optionLabel="name"
+                placeholder="Seleccionar Servicio"
+              />
+            </div>
+            <div class="col flex align-items-end">
+              <Button
+                label="Agregar Servicio"
+                icon="pi pi-plus"
+                class="p-button-success p-mr-2"
+                @click="addServiceToOrder(selectedService)"
+              />
+            </div>
+          </div>
+        </div>
         <div class="p-field mb-2">
           <label class="mb-2" for="description">Descripción</label>
           <Textarea id="description" v-model="order.description" rows="3" cols="20" />
         </div>
-
+        <!-- Vista de Productos Seleccionados -->
+        <DataTable :value="selectedProducts" responsiveLayout="scroll">
+          <template #header>
+            <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
+              <h4>Productos asociados a la Cotización</h4>
+            </div>
+          </template>
+          <Column field="id" header="Código" sortable></Column>
+          <Column field="name" header="Nombre" sortable></Column>
+          <Column field="brandName" header="Marca" sortable></Column>
+          <Column field="quantity" header="Cantidad" sortable>
+            <template #body="slotProps" sortable>
+              {{slotProps.data.ProductDetail.quantity}}
+            </template>
+          </Column>
+          <Column field="unit price" header="Precio Unitario" sortable>
+            <template #body="slotProps" sortable>
+              {{formatCurrency(slotProps.data.price)}}
+            </template>
+          </Column>
+          <Column field="price" header="Precio Total" sortable>
+            <template #body="slotProps" sortable>
+              {{formatCurrency((slotProps.data.ProductDetail.quantity)*(slotProps.data.price))}}
+            </template>
+          </Column>
+          <Column headerStyle="width:4rem">
+            <template #body>
+              <Button icon="pi pi-pencil" class="p-button-rounded p-button-info mr-1" />
+              <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" />
+            </template>
+          </Column>
+        </DataTable>
+        <!-- Vista de Servicios Seleccionados -->
+        <DataTable :value="selectedServices" responsiveLayout="scroll">
+          <template #header>
+            <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
+              <h4>Servicios asociados a la Cotización</h4>
+            </div>
+          </template>
+          <Column field="id" header="Código" sortable></Column>
+          <Column field="name" header="Nombre" sortable></Column>
+          <Column field="unit price" header="Precio Unitario" sortable>
+            <template #body="slotProps" sortable>
+              {{formatCurrency(slotProps.data.price)}}
+            </template>
+          </Column>
+          <Column field="price" header="Precio Total" sortable>
+            <template #body="slotProps" sortable>
+              {{formatCurrency(slotProps.data.price)}}
+            </template>
+          </Column>
+          <Column headerStyle="width:4rem">
+            <template #body>
+              <Button icon="pi pi-pencil" class="p-button-rounded p-button-info mr-1" />
+              <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" />
+            </template>
+          </Column>
+        </DataTable>
         <template class="p-text-center" #footer>
           <Button label="Cancelar" icon="pi pi-times" class="p-button-raised p-button-danger" @click="hideDialog"/>
           <Button label="Guardar" icon="pi pi-check" class="p-button-raised p-button-success" @click="saveOrder" />
@@ -329,6 +347,7 @@ import { useToast } from 'primevue/usetoast'
 import OrderService from '../service/OrderService'
 import ClientService from '../service/ClientService'
 import ProductService from '../service/ProductService'
+import ServiceService from '../service/ServiceService'
 
 export default {
   name: 'Orders',
@@ -337,8 +356,9 @@ export default {
   },
   setup () {
     onMounted(() => {
-      orderService.value.getOrders().then(data => { orders.value = data })
+      orderService.value.getOrders().then(data => { orders.value = data }).finally(() => { console.log(orders.value) })
       productService.value.getProducts().then(data => { productsOptions.value = data })
+      serviceService.value.getServices().then(data => { servicesOptions.value = data })
       clientService.value.getClients().then(data => { clientsOptions.value = data })
     })
 
@@ -349,20 +369,28 @@ export default {
     const newClient = ref({})
     const toast = useToast()
     const selectedOrders = ref()
+    const selectedProduct = ref({})
+    const selectedProducts = ref([])
+    const selectedService = ref({})
+    const selectedServices = ref([])
     const submitted = ref(false)
     const submittedClient = ref(false)
     const expandedRows = ref([])
     const selectedClient = ref()
     const filteredClients = ref()
     const productsOptions = ref()
-    const orderDialog = ref(false)
+    const servicesOptions = ref()
+    const newOrderDialog = ref(false)
     const newClientDialog = ref(false)
     const payOrderDialog = ref(false)
     const deleteOrderDialog = ref(false)
     const deleteOrdersDialog = ref(false)
+    const selectedProductQuantity = ref()
+    const selectedServiceQuantity = ref()
     const orderService = ref(new OrderService())
     const clientService = ref(new ClientService())
     const productService = ref(new ProductService())
+    const serviceService = ref(new ServiceService())
 
     const statuses = ref([
       { label: 'Rechazada', value: 'rejected' },
@@ -372,20 +400,6 @@ export default {
 
     const iva = ref(0.19)
 
-    const onRowExpand = (event) => {
-      console.log('Cotización Expandida')
-    }
-    const onRowCollapse = (event) => {
-      console.log('Cotización Colapsada')
-    }
-    const expandAll = () => {
-      expandedRows.value = order.value.filter(ord => ord.id)
-      console.log('Todas las filas expandidas')
-    }
-    const collapseAll = () => {
-      expandedRows.value = null
-      console.log('Todas las filas colapsadas')
-    }
     const filters = ref({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     })
@@ -415,37 +429,62 @@ export default {
     const openNew = () => {
       order.value = {}
       submitted.value = false
-      orderDialog.value = true
+      newOrderDialog.value = true
     }
+    const addProductToOrder = (prod, quantity) => {
+      if (selectedProduct.value && selectedProductQuantity.value > 0) {
+        selectedProducts.value.push({
+          ...prod,
+          ProductDetail: {
+            quantity
+          }
+        })
+      }
+      selectedProduct.value = {}
+      selectedProductQuantity.value = null
+    }
+
+    const addServiceToOrder = (serv) => {
+      if (selectedService.value) {
+        selectedServices.value.push({
+          ...serv
+        })
+      }
+      selectedService.value = {}
+    }
+
     const hideDialog = () => {
-      orderDialog.value = false
+      newOrderDialog.value = false
       submitted.value = false
+      selectedProducts.value = {}
+      selectedServices.value = {}
+      selectedClient.value = null
     }
     const saveOrder = () => {
       submitted.value = true
-      console.log(order.value.client)
-      if (order.value.client.contactName.trim()) {
-        if (order.value.code) {
-          console.log('Paso por aqui')
-        } else {
-          order.value.code = createCode()
-          order.value.netValue = 444
-          order.value.subTotalValue = 444
-          order.value.totalValue = calculateTotalValue(444)
-          order.value.description = order.value.description.value ? order.value.description.value : order.value.description
-          order.value.clientId = order.value.client.id
-          try {
-            orderService.value.createOrder(order.value)
-              .then(data => { console.log(data) })
-              .finally(() => {
-                orderService.value.getOrders().then(data => { orders.value = data })
-              })
-          } catch (err) {
-            console.error(err)
-          }
+      if (selectedClient.value.contactName.trim()) {
+        console.log(selectedClient.value)
+        order.value.code = createCode()
+        order.value.netValue = 444
+        order.value.subTotalValue = 444
+        order.value.totalValue = calculateTotalValue(444)
+        order.value.description = order.value.description.value ? order.value.description.value : order.value.description
+        order.value.clientId = selectedClient.value.id
+        order.value.products = selectedProducts.value
+        order.value.services = selectedServices.value
+        console.log(selectedServices.value)
+        console.log(order.value)
+        try {
+          orderService.value.createOrder(order.value)
+            .then(data => { console.log(data) })
+            .finally(() => {
+              orderService.value.getOrders().then(data => { orders.value = data })
+            })
+        } catch (err) {
+          console.error(err)
         }
 
-        orderDialog.value = false
+        newOrderDialog.value = false
         order.value = {}
       }
     }
@@ -502,8 +541,11 @@ export default {
     }
 
     watchEffect(() => {
-      if (order.value) {
-        console.log(order.value)
+      if (selectedProducts.value) {
+        console.log(selectedProducts.value)
+      }
+      if (selectedServices.value) {
+        console.log(selectedServices.value)
       }
     })
 
@@ -513,7 +555,7 @@ export default {
 
     const editOrder = (ord) => {
       order.value = { ...ord }
-      orderDialog.value = true
+      newOrderDialog.value = true
     }
     const payOrder = (ord) => {
       order.value = { ...ord }
@@ -586,31 +628,36 @@ export default {
       createCode,
       saveOrder,
       editOrder,
-      expandAll,
       submitted,
       exportCSV,
       saveClient,
       hideDialog,
-      orderDialog,
-      collapseAll,
+      newOrderDialog,
       deleteOrder,
-      onRowExpand,
       searchClient,
       expandedRows,
       newClientDialog,
+      selectedProduct,
+      selectedService,
       openNewClient,
       findIndexById,
       formatStatus,
-      onRowCollapse,
       selectedOrders,
       selectedClient,
       payOrderDialog,
       formatCurrency,
       clientsOptions,
       productsOptions,
+      servicesOptions,
       submittedClient,
       filteredClients,
       hideNewClientDialog,
+      selectedProducts,
+      selectedServices,
+      selectedProductQuantity,
+      selectedServiceQuantity,
+      addProductToOrder,
+      addServiceToOrder,
       deleteOrderDialog,
       deleteOrdersDialog,
       confirmDeleteOrder,

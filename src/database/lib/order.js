@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = function setupOrder (OrderModel, ClientModel) {
+module.exports = function setupOrder (OrderModel, ClientModel, ProductModel, ServiceModel) {
   async function createOrUpdate (ord) {
     const cond = {
       where: {
@@ -15,7 +15,13 @@ module.exports = function setupOrder (OrderModel, ClientModel) {
       return updated ? OrderModel.findOne(cond) : existingOrder
     }
 
-    const result = await OrderModel.create(ord)
+    const result = await OrderModel.create({
+      ...ord
+    }, {
+      include: {
+        model: ServiceModel
+      }
+    })
     return result.toJSON()
   }
 
@@ -29,25 +35,19 @@ module.exports = function setupOrder (OrderModel, ClientModel) {
   }
 
   async function findAll () {
+    return await OrderModel.findAll({ include: { all: true, nested: true }, raw: true })
+  }
+
+  async function findAllSales (status) {
     return await OrderModel.findAll({
+      where: {
+        paymentStatus: status
+      },
       include: {
-        model: ClientModel
+        model: ClientModel, ProductModel, ServiceModel
       },
       raw: true
     })
-  }
-
-  async function findAllSales () {
-    const cond = {
-      where: {
-        paymentStatus: 'paid'
-      },
-      include: {
-        model: ClientModel
-      },
-      raw: true
-    }
-    return await OrderModel.findAll(cond)
   }
 
   async function deleteByCode (code) {
